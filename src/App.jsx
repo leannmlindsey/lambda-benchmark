@@ -52,20 +52,22 @@ export default function App() {
       availableModels.add(m)
     );
 
+    const getDefaultModels = () => {
+      const excludedBases = new Set(["ProkBERT-mini-long", "ProkBERT-mini-c"]);
+      const defaultComparison = new Set(["PIDE", "PHASTER", "geNomad"]);
+      const initial = new Set();
+      availableModels.forEach((m) => {
+        const base = m.replace(/\s+\d+k$/, "");
+        if (excludedBases.has(base)) return;
+        if (isComparisonModel(m) && !defaultComparison.has(base)) return;
+        initial.add(m);
+      });
+      return initial;
+    };
+
     setVisibleModels((prev) => {
-      if (prev.size === 0) {
-        // First load: check genomic LMs (except ProkBERT variants) + select comparison tools
-        const excludedBases = new Set(["ProkBERT-mini-long", "ProkBERT-mini-c"]);
-        const defaultComparison = new Set(["PIDE", "PHASTER", "geNomad"]);
-        const initial = new Set();
-        availableModels.forEach((m) => {
-          const base = m.replace(/\s+\d+k$/, "");
-          if (excludedBases.has(base)) return;
-          if (isComparisonModel(m) && !defaultComparison.has(base)) return;
-          initial.add(m);
-        });
-        return initial;
-      }
+      if (prev.size === 0) return getDefaultModels();
+
       // Remap previous selections to the current window size.
       // e.g. "DNABERT2 2k" → "DNABERT2 4k" when switching to 4k.
       const next = new Set();
@@ -80,7 +82,8 @@ export default function App() {
           }
         }
       });
-      return next;
+      // If remap produced nothing (shouldn't happen), fall back to defaults
+      return next.size > 0 ? next : getDefaultModels();
     });
   }, [genomeData]);
 
