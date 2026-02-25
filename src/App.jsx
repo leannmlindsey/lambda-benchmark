@@ -54,10 +54,15 @@ export default function App() {
 
     setVisibleModels((prev) => {
       if (prev.size === 0) {
-        // First load: check all genomic LMs, leave comparison tools unchecked
+        // First load: check genomic LMs (except ProkBERT variants) + select comparison tools
+        const excludedBases = new Set(["ProkBERT-mini-long", "ProkBERT-mini-c"]);
+        const defaultComparison = new Set(["PIDE", "PHASTER", "geNomad"]);
         const initial = new Set();
         availableModels.forEach((m) => {
-          if (!isComparisonModel(m)) initial.add(m);
+          const base = m.replace(/\s+\d+k$/, "");
+          if (excludedBases.has(base)) return;
+          if (isComparisonModel(m) && !defaultComparison.has(base)) return;
+          initial.add(m);
         });
         return initial;
       }
