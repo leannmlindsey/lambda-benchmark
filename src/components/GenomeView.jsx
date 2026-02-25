@@ -201,20 +201,19 @@ export default function GenomeView({
         }
       }
 
-      // Per-segment signal when raw signal toggle is on (filled line trace)
+      // Per-segment signal when raw signal toggle is on (step scatter — fast)
       if (showRawSignal && !isComparisonModel(modelLabel)) {
         const segments = genomeData.per_segment?.[modelLabel] || [];
 
         if (segments.length > 0) {
-          // Use midpoints for x, prob_1 for y — show continuous signal as filled area
           traces.push({
             type: "scatter",
             mode: "lines",
             x: segments.map((s) => (s[0] + s[1]) / 2),
             y: segments.map((s) => s[2]),
+            line: { color: color, width: 0.5, shape: "hvh" },
             fill: "tozeroy",
-            fillcolor: hexToRgba(color, 0.3),
-            line: { color: color, width: 0.5 },
+            fillcolor: hexToRgba(color, 0.25),
             xaxis: xAxisId,
             yaxis: yAxisId,
             hovertemplate:

@@ -141,6 +141,51 @@ export default function ProphageZoomView({
           y1: threshold,
           line: { color: "gray", width: 0.8, dash: "dash" },
         });
+      } else if (clustered.length > 0) {
+        // No filter — show all clustered predictions in model color
+        clustered.forEach((pred) => {
+          const clippedS = Math.max(pred.start, viewStart);
+          const clippedE = Math.min(pred.end, viewEnd);
+          if (clippedS >= clippedE) return;
+
+          const relS = clippedS - viewStart;
+          const relE = clippedE - viewStart;
+          visibleClustered.push({ ...pred, relS, relE });
+
+          shapes.push({
+            type: "rect",
+            xref: "x",
+            yref: yAxisId,
+            x0: relS,
+            x1: relE,
+            y0: 0,
+            y1: pred.avg_score,
+            fillcolor: hexToRgba(color, 0.2),
+            line: { color: color, width: 1.0 },
+            layer: "below",
+          });
+        });
+
+        if (visibleClustered.length > 0) {
+          traces.push({
+            type: "bar",
+            x: visibleClustered.map((p) => (p.relS + p.relE) / 2),
+            y: visibleClustered.map((p) => p.avg_score),
+            width: visibleClustered.map((p) => p.relE - p.relS),
+            marker: { color: "rgba(0,0,0,0)" },
+            xaxis: "x",
+            yaxis: yAxisId,
+            hovertemplate: visibleClustered.map(
+              (p) =>
+                `<b>${modelLabel}</b> (prediction)<br>` +
+                `Pred start: ${formatBp(p.start)}<br>` +
+                `Pred end: ${formatBp(p.end)}<br>` +
+                `Score: ${p.avg_score.toFixed(3)}<br>` +
+                `Size: ${formatBp(p.size)}<extra></extra>`
+            ),
+            showlegend: false,
+          });
+        }
       }
 
       // Raw per-segment prob_1 bars (positive segments only)
