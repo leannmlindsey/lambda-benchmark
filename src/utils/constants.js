@@ -118,9 +118,14 @@ export function getModelFilter(label) {
   return BEST_FILTERS[label] || null;
 }
 
-// Format genomic coordinates
+// Format genomic coordinates (compact, for labels/buttons)
 export function formatBp(bp) {
   if (bp >= 1e6) return `${(bp / 1e6).toFixed(1)} Mb`;
   if (bp >= 1e3) return `${(bp / 1e3).toFixed(0)} kb`;
   return `${bp} bp`;
+}
+
+// Format genomic coordinates with exact bp (for hover tooltips)
+export function formatBpExact(bp) {
+  return `${bp.toLocaleString()} bp`;
 }

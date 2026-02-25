@@ -4,6 +4,7 @@ import {
   getModelColor,
   getModelFilter,
   formatBp,
+  formatBpExact,
   sortModels,
   isComparisonModel,
   CATEGORY_COLORS,
@@ -63,8 +64,8 @@ export default function ProphageZoomView({
         type: "rect",
         xref: "x",
         yref: yAxisId,
-        x0: gt.start - viewStart,
-        x1: gt.end - viewStart,
+        x0: gt.start,
+        x1: gt.end,
         y0: 0,
         y1: 1.05,
         fillcolor: "rgba(0,0,0,0.06)",
@@ -83,17 +84,15 @@ export default function ProphageZoomView({
           if (clippedS >= clippedE) return;
 
           const survives = pred.avg_score >= threshold && pred.size >= minSize;
-          const relS = clippedS - viewStart;
-          const relE = clippedE - viewStart;
 
-          visibleClustered.push({ ...pred, relS, relE, survives });
+          visibleClustered.push({ ...pred, clippedS, clippedE, survives });
 
           shapes.push({
             type: "rect",
             xref: "x",
             yref: yAxisId,
-            x0: relS,
-            x1: relE,
+            x0: clippedS,
+            x1: clippedE,
             y0: 0,
             y1: pred.avg_score,
             fillcolor: survives
@@ -111,19 +110,19 @@ export default function ProphageZoomView({
         if (visibleClustered.length > 0) {
           traces.push({
             type: "bar",
-            x: visibleClustered.map((p) => (p.relS + p.relE) / 2),
+            x: visibleClustered.map((p) => (p.clippedS + p.clippedE) / 2),
             y: visibleClustered.map((p) => p.avg_score),
-            width: visibleClustered.map((p) => p.relE - p.relS),
+            width: visibleClustered.map((p) => p.clippedE - p.clippedS),
             marker: { color: "rgba(0,0,0,0)" }, // invisible
             xaxis: "x",
             yaxis: yAxisId,
             hovertemplate: visibleClustered.map(
               (p) =>
                 `<b>${modelLabel}</b> (clustered pred)<br>` +
-                `Pred start: ${formatBp(p.start)}<br>` +
-                `Pred end: ${formatBp(p.end)}<br>` +
+                `Pred start: ${formatBpExact(p.start)}<br>` +
+                `Pred end: ${formatBpExact(p.end)}<br>` +
                 `Score: ${p.avg_score.toFixed(3)}<br>` +
-                `Size: ${formatBp(p.size)}<br>` +
+                `Size: ${formatBpExact(p.size)}<br>` +
                 `${p.survives ? "SURVIVES filter" : "Filtered out"}<extra></extra>`
             ),
             showlegend: false,
@@ -135,8 +134,8 @@ export default function ProphageZoomView({
           type: "line",
           xref: "x",
           yref: yAxisId,
-          x0: 0,
-          x1: viewLen,
+          x0: viewStart,
+          x1: viewEnd,
           y0: threshold,
           y1: threshold,
           line: { color: "gray", width: 0.8, dash: "dash" },
@@ -148,16 +147,14 @@ export default function ProphageZoomView({
           const clippedE = Math.min(pred.end, viewEnd);
           if (clippedS >= clippedE) return;
 
-          const relS = clippedS - viewStart;
-          const relE = clippedE - viewStart;
-          visibleClustered.push({ ...pred, relS, relE });
+          visibleClustered.push({ ...pred, clippedS, clippedE });
 
           shapes.push({
             type: "rect",
             xref: "x",
             yref: yAxisId,
-            x0: relS,
-            x1: relE,
+            x0: clippedS,
+            x1: clippedE,
             y0: 0,
             y1: pred.avg_score,
             fillcolor: hexToRgba(color, 0.2),
@@ -169,24 +166,40 @@ export default function ProphageZoomView({
         if (visibleClustered.length > 0) {
           traces.push({
             type: "bar",
-            x: visibleClustered.map((p) => (p.relS + p.relE) / 2),
+            x: visibleClustered.map((p) => (p.clippedS + p.clippedE) / 2),
             y: visibleClustered.map((p) => p.avg_score),
-            width: visibleClustered.map((p) => p.relE - p.relS),
+            width: visibleClustered.map((p) => p.clippedE - p.clippedS),
             marker: { color: "rgba(0,0,0,0)" },
             xaxis: "x",
             yaxis: yAxisId,
             hovertemplate: visibleClustered.map(
               (p) =>
                 `<b>${modelLabel}</b> (prediction)<br>` +
-                `Pred start: ${formatBp(p.start)}<br>` +
-                `Pred end: ${formatBp(p.end)}<br>` +
+                `Pred start: ${formatBpExact(p.start)}<br>` +
+                `Pred end: ${formatBpExact(p.end)}<br>` +
                 `Score: ${p.avg_score.toFixed(3)}<br>` +
-                `Size: ${formatBp(p.size)}<extra></extra>`
+                `Size: ${formatBpExact(p.size)}<extra></extra>`
             ),
             showlegend: false,
           });
         }
       }
+
+      // Prediction outlines drawn ABOVE traces so they're visible over raw signal
+      visibleClustered.forEach((pred) => {
+        shapes.push({
+          type: "rect",
+          xref: "x",
+          yref: yAxisId,
+          x0: pred.clippedS,
+          x1: pred.clippedE,
+          y0: 0,
+          y1: pred.avg_score,
+          fillcolor: "rgba(0,0,0,0)",
+          line: { color: color, width: 2.5 },
+          layer: "above",
+        });
+      });
 
       // Raw per-segment prob_1 bars (positive segments only)
       // segments format: [[start, end, prob_1, pred_label], ...]
@@ -199,14 +212,14 @@ export default function ProphageZoomView({
         traces.push({
           type: "bar",
           x: posSegs.map((s) => {
-            const cs = Math.max(s[0], viewStart) - viewStart;
-            const ce = Math.min(s[1], viewEnd) - viewStart;
+            const cs = Math.max(s[0], viewStart);
+            const ce = Math.min(s[1], viewEnd);
             return (cs + ce) / 2;
           }),
           y: posSegs.map((s) => s[2]),
           width: posSegs.map((s) => {
-            const cs = Math.max(s[0], viewStart) - viewStart;
-            const ce = Math.min(s[1], viewEnd) - viewStart;
+            const cs = Math.max(s[0], viewStart);
+            const ce = Math.min(s[1], viewEnd);
             return ce - cs;
           }),
           marker: {
@@ -219,8 +232,8 @@ export default function ProphageZoomView({
           hovertemplate: posSegs.map(
             (s) =>
               `<b>${modelLabel}</b> (segment)<br>` +
-              `Seg start: ${formatBp(s[0])}<br>` +
-              `Seg end: ${formatBp(s[1])}<br>` +
+              `Seg start: ${formatBpExact(s[0])}<br>` +
+              `Seg end: ${formatBpExact(s[1])}<br>` +
               `prob_1: ${s[2].toFixed(3)}<extra></extra>`
           ),
           showlegend: false,
@@ -228,14 +241,7 @@ export default function ProphageZoomView({
       }
 
       // Model label
-      let labelText = modelLabel;
-      if (isComparisonModel(modelLabel)) {
-        // Comparison models: just show name
-      } else if (filter) {
-        labelText += `  (threshold=${filter[0]})`;
-      } else {
-        labelText += "  (raw signal only)";
-      }
+      const labelText = modelLabel;
 
       annotations.push({
         text: labelText,
@@ -270,8 +276,8 @@ export default function ProphageZoomView({
       (pdata.features || []).forEach((feat) => {
         const absStart = pdata.prophage_start + feat.start - 1;
         const absEnd = pdata.prophage_start + feat.end - 1;
-        const clippedS = Math.max(absStart, viewStart) - viewStart;
-        const clippedE = Math.min(absEnd, viewEnd) - viewStart;
+        const clippedS = Math.max(absStart, viewStart);
+        const clippedE = Math.min(absEnd, viewEnd);
         if (clippedS >= clippedE) return;
 
         const catColor = CATEGORY_COLORS[feat.category] || "#999999";
@@ -295,8 +301,8 @@ export default function ProphageZoomView({
       type: "line",
       xref: "x",
       yref: phrogYAxis,
-      x0: 0,
-      x1: viewLen,
+      x0: viewStart,
+      x1: viewEnd,
       y0: 0,
       y1: 0,
       line: { color: "#333", width: 1 },
@@ -307,8 +313,8 @@ export default function ProphageZoomView({
       type: "rect",
       xref: "x",
       yref: phrogYAxis,
-      x0: gt.start - viewStart,
-      x1: gt.end - viewStart,
+      x0: gt.start,
+      x1: gt.end,
       y0: -0.55,
       y1: 0.55,
       fillcolor: "rgba(0,0,0,0.04)",
@@ -336,8 +342,8 @@ export default function ProphageZoomView({
       (pdata.features || []).forEach((feat) => {
         const absStart = pdata.prophage_start + feat.start - 1;
         const absEnd = pdata.prophage_start + feat.end - 1;
-        const clippedS = Math.max(absStart, viewStart) - viewStart;
-        const clippedE = Math.min(absEnd, viewEnd) - viewStart;
+        const clippedS = Math.max(absStart, viewStart);
+        const clippedE = Math.min(absEnd, viewEnd);
         if (clippedS >= clippedE) return;
         allFeatures.push({ ...feat, clippedS, clippedE });
       });
@@ -401,16 +407,16 @@ export default function ProphageZoomView({
     const layoutObj = {
       ...yAxes,
       xaxis: {
-        range: [0, viewLen],
+        range: [viewStart, viewEnd],
         autorange: false,
-        minallowed: 0,
-        maxallowed: viewLen,
+        minallowed: viewStart,
+        maxallowed: viewEnd,
         showgrid: false,
         showticklabels: true,
         tickformat: ",d",
         tickfont: { size: 10 },
         title: {
-          text: `Genomic position relative to ${gt.start.toLocaleString()} bp`,
+          text: "Genomic Position (bp)",
           font: { size: 12 },
         },
         side: "bottom",
@@ -439,14 +445,15 @@ export default function ProphageZoomView({
   const plotRef = useRef(null);
   const isClampingRef = useRef(false);
 
-  // Compute viewLen for clamping (must match useMemo)
-  const viewLen = useMemo(() => {
-    if (!genomeData || prophageIndex == null) return 0;
+  // Compute view bounds for clamping (must match useMemo)
+  const viewBounds = useMemo(() => {
+    if (!genomeData || prophageIndex == null) return null;
     const gt = genomeData.ground_truth[prophageIndex];
-    if (!gt) return 0;
-    const viewStart = Math.max(0, gt.start - PADDING);
-    const viewEnd = gt.end + PADDING;
-    return viewEnd - viewStart;
+    if (!gt) return null;
+    return {
+      start: Math.max(0, gt.start - PADDING),
+      end: gt.end + PADDING,
+    };
   }, [genomeData, prophageIndex]);
 
   const handleRelayout = useCallback(
@@ -455,7 +462,7 @@ export default function ProphageZoomView({
         isClampingRef.current = false;
         return;
       }
-      if (!viewLen || !plotRef.current?.el) return;
+      if (!viewBounds || !plotRef.current?.el) return;
 
       let x0 = update["xaxis.range[0]"];
       let x1 = update["xaxis.range[1]"];
@@ -465,14 +472,14 @@ export default function ProphageZoomView({
       }
       if (x0 == null || x1 == null) return;
 
-      if (x0 < 0 || x1 > viewLen) {
+      if (x0 < viewBounds.start || x1 > viewBounds.end) {
         isClampingRef.current = true;
         Plotly.relayout(plotRef.current.el, {
-          "xaxis.range": [Math.max(0, x0), Math.min(viewLen, x1)],
+          "xaxis.range": [Math.max(viewBounds.start, x0), Math.min(viewBounds.end, x1)],
         });
       }
     },
-    [viewLen]
+    [viewBounds]
   );
 
   if (!genomeData || prophageIndex == null) return null;

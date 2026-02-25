@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useRef } from "react";
 import { Plot, Plotly } from "../utils/plotly";
-import { getModelColor, getModelFilter, formatBp, sortModels, isComparisonModel } from "../utils/constants";
+import { getModelColor, getModelFilter, formatBp, formatBpExact, sortModels, isComparisonModel } from "../utils/constants";
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -58,8 +58,8 @@ export default function GenomeView({
         hovertemplate: gtRegions.map(
           (gt, idx) =>
             `<b>Ground Truth ${idx + 1}</b><br>` +
-            `${formatBp(gt.start)} - ${formatBp(gt.end)}<br>` +
-            `Size: ${formatBp(gt.end - gt.start)}<br>` +
+            `${formatBpExact(gt.start)} - ${formatBpExact(gt.end)}<br>` +
+            `Size: ${formatBpExact(gt.end - gt.start)}<br>` +
             `<i>Click to zoom in</i><extra></extra>`
         ),
         showlegend: false,
@@ -146,10 +146,10 @@ export default function GenomeView({
               hovertemplate: surviving.map(
                 (p) =>
                   `<b>${modelLabel}</b><br>` +
-                  `Pred start: ${formatBp(p.start)}<br>` +
-                  `Pred end: ${formatBp(p.end)}<br>` +
+                  `Pred start: ${formatBpExact(p.start)}<br>` +
+                  `Pred end: ${formatBpExact(p.end)}<br>` +
                   `Score: ${p.avg_score.toFixed(3)}<br>` +
-                  `Size: ${formatBp(p.size)}<extra></extra>`
+                  `Size: ${formatBpExact(p.size)}<extra></extra>`
               ),
               showlegend: false,
             });
@@ -170,10 +170,10 @@ export default function GenomeView({
               hovertemplate: filtered_out.map(
                 (p) =>
                   `<b>${modelLabel}</b> (filtered)<br>` +
-                  `Pred start: ${formatBp(p.start)}<br>` +
-                  `Pred end: ${formatBp(p.end)}<br>` +
+                  `Pred start: ${formatBpExact(p.start)}<br>` +
+                  `Pred end: ${formatBpExact(p.end)}<br>` +
                   `Score: ${p.avg_score.toFixed(3)}<br>` +
-                  `Size: ${formatBp(p.size)}<extra></extra>`
+                  `Size: ${formatBpExact(p.size)}<extra></extra>`
               ),
               showlegend: false,
             });
@@ -191,10 +191,10 @@ export default function GenomeView({
             hovertemplate: clustered.map(
               (p) =>
                 `<b>${modelLabel}</b> (no filter)<br>` +
-                `Pred start: ${formatBp(p.start)}<br>` +
-                `Pred end: ${formatBp(p.end)}<br>` +
+                `Pred start: ${formatBpExact(p.start)}<br>` +
+                `Pred end: ${formatBpExact(p.end)}<br>` +
                 `Score: ${p.avg_score.toFixed(3)}<br>` +
-                `Size: ${formatBp(p.size)}<extra></extra>`
+                `Size: ${formatBpExact(p.size)}<extra></extra>`
             ),
             showlegend: false,
           });
@@ -232,17 +232,11 @@ export default function GenomeView({
       };
 
       let labelText = modelLabel;
-      if (isComparisonModel(modelLabel)) {
-        // Comparison models: just show name, no filter/metric annotations
-      } else if (metrics) {
+      if (!isComparisonModel(modelLabel) && metrics) {
         const mcc = safeFixed(metrics.filt_mcc);
         const rec = safeFixed(metrics.filt_recall);
         const prec = safeFixed(metrics.filt_precision);
         labelText += `   MCC=${mcc}  Recall=${rec}  Prec=${prec}`;
-      } else if (clustered.length > 0 && !filter) {
-        labelText += "  (no filter applied)";
-      } else if (!filter) {
-        labelText += "  (raw signal only)";
       }
 
       annotations.push({
