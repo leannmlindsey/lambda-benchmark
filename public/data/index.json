@@ -1,0 +1,1042 @@
+[
+  {
+    "assembly": "GCA_000012265.1",
+    "organism": "Pseudomonas protegens Pf-6",
+    "ncbi_id": "CP000076",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas_E",
+    "num_prophages": 2,
+    "genome_length": 7074893,
+    "avg_mcc": 0.673,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_000143885.2",
+    "organism": "Gordonia sp. KTR9",
+    "ncbi_id": "CP002907",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 1,
+    "genome_length": 5441391,
+    "avg_mcc": 0.0,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_000284555.1",
+    "organism": "Pseudomonas aeruginosa NCGM2.S3",
+    "ncbi_id": "AP012280",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 3,
+    "genome_length": 6764661,
+    "avg_mcc": 0.668,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_000504045.1",
+    "organism": "Pseudomonas aeruginosa MTB-3",
+    "ncbi_id": "CP006853",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 3,
+    "genome_length": 6580038,
+    "avg_mcc": 0.726,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_001618925.1",
+    "organism": "Pseudomonas aeruginosa strain ATCC 27854",
+    "ncbi_id": "CP015117",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 2,
+    "genome_length": 6827737,
+    "avg_mcc": 0.541,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_002993285.1",
+    "organism": "Gordonia iterans strain Co17",
+    "ncbi_id": "CP027433",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 1,
+    "genome_length": 4006485,
+    "avg_mcc": -0.013,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_013348785.1",
+    "organism": "Gordonia sp. X0973",
+    "ncbi_id": "CP054691",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 1,
+    "genome_length": 3747033,
+    "avg_mcc": 0.932,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_014070455.1",
+    "organism": "Gordonia rubripertincta strain SD8",
+    "ncbi_id": "CP059694",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 4,
+    "genome_length": 5104173,
+    "avg_mcc": 0.858,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_016919385.1",
+    "organism": "Gordonia sp. PDNC006",
+    "ncbi_id": "CP070351",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 2,
+    "genome_length": 4260791,
+    "avg_mcc": 0.905,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017183655.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD25",
+    "ncbi_id": "CP063320",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 1,
+    "genome_length": 5112318,
+    "avg_mcc": 0.593,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017183775.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD22",
+    "ncbi_id": "CP063324",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 1,
+    "genome_length": 5073923,
+    "avg_mcc": 0.814,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017183795.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD20",
+    "ncbi_id": "CP063327",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 1,
+    "genome_length": 5026147,
+    "avg_mcc": 0.904,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017183835.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD17",
+    "ncbi_id": "CP063165",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 2,
+    "genome_length": 5107403,
+    "avg_mcc": 0.911,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017183915.1",
+    "organism": "Mycobacteroides abscessus subsp. bolletii strain GD91",
+    "ncbi_id": "CP065265",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 5,
+    "genome_length": 5312857,
+    "avg_mcc": 0.898,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017189375.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD57",
+    "ncbi_id": "CP065275",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 2,
+    "genome_length": 5120346,
+    "avg_mcc": 0.884,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017189435.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD43A",
+    "ncbi_id": "CP065279",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 6,
+    "genome_length": 5377795,
+    "avg_mcc": 0.904,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017190535.1",
+    "organism": "Mycobacteroides abscessus subsp. massiliense strain GD68A",
+    "ncbi_id": "CP065273",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 1,
+    "genome_length": 5119772,
+    "avg_mcc": 0.608,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017190795.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD05",
+    "ncbi_id": "CP065287",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 4,
+    "genome_length": 5352395,
+    "avg_mcc": 0.806,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_017190875.1",
+    "organism": "Mycobacteroides abscessus subsp. abscessus strain GD21",
+    "ncbi_id": "CP065284",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 4,
+    "genome_length": 5218527,
+    "avg_mcc": 0.877,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_019930645.1",
+    "organism": "Gordonia bronchialis strain FDAARGOS_1476",
+    "ncbi_id": "CP082859",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 1,
+    "genome_length": 5307108,
+    "avg_mcc": 0.772,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCA_020735545.1",
+    "organism": "Gordonia otitidis strain FDAARGOS_1600",
+    "ncbi_id": "CP085974",
+    "phylum": "Actinomycetota",
+    "genus": "Gordonia",
+    "num_prophages": 1,
+    "genome_length": 5108829,
+    "avg_mcc": 0.759,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006645.1",
+    "organism": "Yersinia pestis KIM",
+    "ncbi_id": "NC_004088",
+    "phylum": "Pseudomonadota",
+    "genus": "Yersinia",
+    "num_prophages": 5,
+    "genome_length": 4600755,
+    "avg_mcc": 0.393,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006665.1",
+    "organism": "Escherichia coli O157:H7 EDL933",
+    "ncbi_id": "NC_002655",
+    "phylum": "Pseudomonadota",
+    "genus": "Escherichia",
+    "num_prophages": 22,
+    "genome_length": 5528445,
+    "avg_mcc": 0.574,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006725.1",
+    "organism": "Xylella fastidiosa 9a5c",
+    "ncbi_id": "NC_002488",
+    "phylum": "Pseudomonadota",
+    "genus": "Xylella",
+    "num_prophages": 9,
+    "genome_length": 4000,
+    "avg_mcc": 0.2,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006765.1",
+    "organism": "Pseudomonas aeruginosa PAO1",
+    "ncbi_id": "NC_002516",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 4,
+    "genome_length": 6264404,
+    "avg_mcc": 0.47,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006785.2",
+    "organism": "Streptococcus pyogenes M1 GAS",
+    "ncbi_id": "NC_002737",
+    "phylum": "Bacillota",
+    "genus": "Streptococcus",
+    "num_prophages": 4,
+    "genome_length": 1852433,
+    "avg_mcc": 0.847,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006865.1",
+    "organism": "Lactococcus lactis subsp. lactis Il1403",
+    "ncbi_id": "NC_002662",
+    "phylum": "Bacillota",
+    "genus": "Lactococcus",
+    "num_prophages": 6,
+    "genome_length": 2365589,
+    "avg_mcc": 0.822,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000006925.2",
+    "organism": "Shigella flexneri 2a str. 301",
+    "ncbi_id": "NC_004337",
+    "phylum": "Pseudomonadota",
+    "genus": "Escherichia",
+    "num_prophages": 14,
+    "genome_length": 2071192,
+    "avg_mcc": 0.468,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007145.1",
+    "organism": "Xanthomonas campestris pv. campestris str. ATCC 33913",
+    "ncbi_id": "NC_003902",
+    "phylum": "Pseudomonadota",
+    "genus": "Xanthomonas",
+    "num_prophages": 4,
+    "genome_length": 5076188,
+    "avg_mcc": 0.52,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007165.1",
+    "organism": "Xanthomonas axonopodis pv. citri str. 306",
+    "ncbi_id": "NC_003919",
+    "phylum": "Pseudomonadota",
+    "genus": "Xanthomonas",
+    "num_prophages": 2,
+    "genome_length": 5175554,
+    "avg_mcc": 0.396,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007245.1",
+    "organism": "Xylella fastidiosa Temecula1",
+    "ncbi_id": "NC_004556",
+    "phylum": "Pseudomonadota",
+    "genus": "Xylella",
+    "num_prophages": 9,
+    "genome_length": 2519802,
+    "avg_mcc": 0.294,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007265.1",
+    "organism": "Streptococcus agalactiae 2603V/R",
+    "ncbi_id": "NC_004116",
+    "phylum": "Bacillota",
+    "genus": "Streptococcus",
+    "num_prophages": 2,
+    "genome_length": 2160267,
+    "avg_mcc": 0.85,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007285.1",
+    "organism": "Streptococcus pyogenes MGAS8232",
+    "ncbi_id": "NC_003485",
+    "phylum": "Bacillota",
+    "genus": "Streptococcus",
+    "num_prophages": 5,
+    "genome_length": 1895017,
+    "avg_mcc": 0.867,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007405.1",
+    "organism": "Shigella flexneri 2a str. 2457T",
+    "ncbi_id": "NC_004741",
+    "phylum": "Pseudomonadota",
+    "genus": "Escherichia",
+    "num_prophages": 18,
+    "genome_length": 4599354,
+    "avg_mcc": 0.377,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007425.1",
+    "organism": "Streptococcus pyogenes MGAS315",
+    "ncbi_id": "NC_004070",
+    "phylum": "Bacillota",
+    "genus": "Streptococcus",
+    "num_prophages": 6,
+    "genome_length": 1900521,
+    "avg_mcc": 0.833,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007445.1",
+    "organism": "Escherichia coli CFT073",
+    "ncbi_id": "NC_004431",
+    "phylum": "Pseudomonadota",
+    "genus": "Escherichia",
+    "num_prophages": 10,
+    "genome_length": 5231428,
+    "avg_mcc": 0.488,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007505.1",
+    "organism": "Brucella suis 1330",
+    "ncbi_id": "NC_004310",
+    "phylum": "Pseudomonadota",
+    "genus": "Brucella",
+    "num_prophages": 1,
+    "genome_length": 2107794,
+    "avg_mcc": -0.006,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007525.1",
+    "organism": "Bifidobacterium longum NCC2705",
+    "ncbi_id": "NC_004307",
+    "phylum": "Actinomycetota",
+    "genus": "Bifidobacterium",
+    "num_prophages": 1,
+    "genome_length": 2256640,
+    "avg_mcc": 0.505,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007545.1",
+    "organism": "Salmonella enterica subsp. enterica serovar Typhi Ty2",
+    "ncbi_id": "NC_004631",
+    "phylum": "Pseudomonadota",
+    "genus": "Salmonella",
+    "num_prophages": 6,
+    "genome_length": 4791961,
+    "avg_mcc": 0.505,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007565.2",
+    "organism": "Pseudomonas putida KT2440",
+    "ncbi_id": "NC_002947",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas_E",
+    "num_prophages": 5,
+    "genome_length": 6181873,
+    "avg_mcc": 0.825,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007625.1",
+    "organism": "Clostridium tetani E88",
+    "ncbi_id": "NC_004557",
+    "phylum": "Bacillota",
+    "genus": "Clostridium_G",
+    "num_prophages": 3,
+    "genome_length": 2799251,
+    "avg_mcc": 0.956,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007705.1",
+    "organism": "Chromobacterium violaceum ATCC 12472",
+    "ncbi_id": "NC_005085",
+    "phylum": "Pseudomonadota",
+    "genus": "Chromobacterium",
+    "num_prophages": 3,
+    "genome_length": 4751080,
+    "avg_mcc": 0.501,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007785.1",
+    "organism": "Enterococcus faecalis V583",
+    "ncbi_id": "NC_004668",
+    "phylum": "Bacillota",
+    "genus": "Enterococcus",
+    "num_prophages": 9,
+    "genome_length": 3218031,
+    "avg_mcc": 0.539,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007805.1",
+    "organism": "Pseudomonas syringae pv. tomato str. DC3000",
+    "ncbi_id": "NC_004578",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas_E",
+    "num_prophages": 8,
+    "genome_length": 4142448,
+    "avg_mcc": 0.475,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007825.1",
+    "organism": "Bacillus cereus ATCC 14579",
+    "ncbi_id": "NC_004722",
+    "phylum": "Bacillota",
+    "genus": "Bacillus_A",
+    "num_prophages": 4,
+    "genome_length": 5411809,
+    "avg_mcc": 0.728,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000007845.1",
+    "organism": "Bacillus anthracis str. Ames",
+    "ncbi_id": "NC_003997",
+    "phylum": "Bacillota",
+    "genus": "Bacillus_A",
+    "num_prophages": 5,
+    "genome_length": 5227293,
+    "avg_mcc": 0.642,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000008025.1",
+    "organism": "Wolbachia endosymbiont of Drosophila melanogaster",
+    "ncbi_id": "NC_002978",
+    "phylum": "Pseudomonadota",
+    "genus": "Wolbachia",
+    "num_prophages": 5,
+    "genome_length": 1267782,
+    "avg_mcc": 0.209,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000008065.1",
+    "organism": "Lactobacillus johnsonii NCC 533",
+    "ncbi_id": "NC_005362",
+    "phylum": "Bacillota",
+    "genus": "Lactobacillus",
+    "num_prophages": 2,
+    "genome_length": 1992676,
+    "avg_mcc": 0.867,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000008185.1",
+    "organism": "Treponema denticola ATCC 35405",
+    "ncbi_id": "NC_002967",
+    "phylum": "Spirochaetota",
+    "genus": "Treponema_B",
+    "num_prophages": 1,
+    "genome_length": 2843201,
+    "avg_mcc": 0.409,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000008765.1",
+    "organism": "Clostridium acetobutylicum ATCC 824",
+    "ncbi_id": "NC_003030",
+    "phylum": "Bacillota",
+    "genus": "Clostridium_S",
+    "num_prophages": 2,
+    "genome_length": 3940880,
+    "avg_mcc": 0.782,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000008805.1",
+    "organism": "Neisseria meningitidis MC58",
+    "ncbi_id": "NC_003112",
+    "phylum": "Pseudomonadota",
+    "genus": "Neisseria",
+    "num_prophages": 2,
+    "genome_length": 2272360,
+    "avg_mcc": 0.687,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009065.1",
+    "organism": "Yersinia pestis CO92",
+    "ncbi_id": "NC_003143",
+    "phylum": "Pseudomonadota",
+    "genus": "Yersinia",
+    "num_prophages": 6,
+    "genome_length": 4653728,
+    "avg_mcc": 0.396,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009105.1",
+    "organism": "Neisseria meningitidis Z2491",
+    "ncbi_id": "NC_003116",
+    "phylum": "Pseudomonadota",
+    "genus": "Neisseria",
+    "num_prophages": 3,
+    "genome_length": 2184406,
+    "avg_mcc": 0.544,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009125.1",
+    "organism": "Ralstonia solanacearum GMI1000",
+    "ncbi_id": "NC_003295",
+    "phylum": "Pseudomonadota",
+    "genus": "Ralstonia",
+    "num_prophages": 8,
+    "genome_length": 3716413,
+    "avg_mcc": 0.473,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009625.1",
+    "organism": "Mesorhizobium loti MAFF303099",
+    "ncbi_id": "NC_002678",
+    "phylum": "Pseudomonadota",
+    "genus": "Mesorhizobium",
+    "num_prophages": 4,
+    "genome_length": 7036071,
+    "avg_mcc": 0.509,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009645.1",
+    "organism": "Staphylococcus aureus subsp. aureus N315",
+    "ncbi_id": "NC_002745",
+    "phylum": "Bacillota",
+    "genus": "Staphylococcus",
+    "num_prophages": 4,
+    "genome_length": 2814816,
+    "avg_mcc": 0.307,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009665.1",
+    "organism": "Staphylococcus aureus subsp. aureus Mu50",
+    "ncbi_id": "NC_002758",
+    "phylum": "Bacillota",
+    "genus": "Staphylococcus",
+    "num_prophages": 6,
+    "genome_length": 2878529,
+    "avg_mcc": 0.419,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009685.1",
+    "organism": "Clostridium perfringens str. 13",
+    "ncbi_id": "NC_003366",
+    "phylum": "Bacillota",
+    "genus": "Sarcina",
+    "num_prophages": 1,
+    "genome_length": 3031430,
+    "avg_mcc": 0.731,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000009765.2",
+    "organism": "Streptomyces avermitilis MA-4680",
+    "ncbi_id": "NC_003155",
+    "phylum": "Actinomycetota",
+    "genus": "Streptomyces",
+    "num_prophages": 1,
+    "genome_length": 9025608,
+    "avg_mcc": 0.526,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000011145.1",
+    "organism": "Bacillus halodurans C-125",
+    "ncbi_id": "NC_002570",
+    "phylum": "Bacillota",
+    "genus": "Halalkalibacterium",
+    "num_prophages": 4,
+    "genome_length": 4202352,
+    "avg_mcc": 0.208,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000011265.1",
+    "organism": "Staphylococcus aureus subsp. aureus MW2",
+    "ncbi_id": "NC_003923",
+    "phylum": "Bacillota",
+    "genus": "Staphylococcus",
+    "num_prophages": 4,
+    "genome_length": 2820462,
+    "avg_mcc": 0.447,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000011285.1",
+    "organism": "Streptococcus pyogenes SSI-1",
+    "ncbi_id": "NC_004606",
+    "phylum": "Bacillota",
+    "genus": "Streptococcus",
+    "num_prophages": 6,
+    "genome_length": 1894275,
+    "avg_mcc": 0.907,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000026645.1",
+    "organism": "Pseudomonas aeruginosa LESB61",
+    "ncbi_id": "NC_011770",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 4,
+    "genome_length": 1035570,
+    "avg_mcc": 0.821,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000027305.1",
+    "organism": "Haemophilus influenzae Rd KW20",
+    "ncbi_id": "NC_000907",
+    "phylum": "Pseudomonadota",
+    "genus": "Haemophilus",
+    "num_prophages": 3,
+    "genome_length": 1830138,
+    "avg_mcc": 0.488,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000146165.2",
+    "organism": "Shewanella oneidensis MR-1",
+    "ncbi_id": "NC_004347",
+    "phylum": "Pseudomonadota",
+    "genus": "Shewanella",
+    "num_prophages": 3,
+    "genome_length": 4969811,
+    "avg_mcc": 0.8,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000195795.1",
+    "organism": "Listeria innocua Clip11262",
+    "ncbi_id": "NC_003212",
+    "phylum": "Bacillota",
+    "genus": "Listeria",
+    "num_prophages": 6,
+    "genome_length": 3011208,
+    "avg_mcc": 0.876,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000195815.1",
+    "organism": "Corynebacterium diphtheriae NCTC 13129",
+    "ncbi_id": "NC_002935",
+    "phylum": "Actinomycetota",
+    "genus": "Corynebacterium",
+    "num_prophages": 4,
+    "genome_length": 2488635,
+    "avg_mcc": 0.453,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000195955.2",
+    "organism": "Mycobacterium tuberculosis H37Rv",
+    "ncbi_id": "NC_000962",
+    "phylum": "Actinomycetota",
+    "genus": "Mycobacterium",
+    "num_prophages": 2,
+    "genome_length": 4411532,
+    "avg_mcc": 0.122,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000195995.1",
+    "organism": "Salmonella enterica subsp. enterica serovar Typhi str. CT18",
+    "ncbi_id": "NC_003198",
+    "phylum": "Pseudomonadota",
+    "genus": "Salmonella",
+    "num_prophages": 8,
+    "genome_length": 4809037,
+    "avg_mcc": 0.606,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000196035.1",
+    "organism": "Listeria monocytogenes EGD-e",
+    "ncbi_id": "NC_003210",
+    "phylum": "Bacillota",
+    "genus": "Listeria",
+    "num_prophages": 2,
+    "genome_length": 2944528,
+    "avg_mcc": 0.755,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000196155.1",
+    "organism": "Photorhabdus luminescens subsp. laumondii TTO1",
+    "ncbi_id": "NC_005126",
+    "phylum": "Pseudomonadota",
+    "genus": "Photorhabdus",
+    "num_prophages": 25,
+    "genome_length": 5688987,
+    "avg_mcc": 0.228,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000203855.3",
+    "organism": "Lactobacillus plantarum WCFS1",
+    "ncbi_id": "NC_004567",
+    "phylum": "Bacillota",
+    "genus": "Lactiplantibacillus",
+    "num_prophages": 5,
+    "genome_length": 3308273,
+    "avg_mcc": 0.766,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000226155.1",
+    "organism": "Pseudomonas aeruginosa M18",
+    "ncbi_id": "NC_017548",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 1,
+    "genome_length": 6327754,
+    "avg_mcc": 0.578,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000496605.2",
+    "organism": "Pseudomonas aeruginosa PA3",
+    "ncbi_id": "NC_022808",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 3,
+    "genome_length": 6498072,
+    "avg_mcc": 0.722,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000508765.1",
+    "organism": "Pseudomonas aeruginosa LES433",
+    "ncbi_id": "NC_023066",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 3,
+    "genome_length": 6550070,
+    "avg_mcc": 0.811,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "GCF_000510305.1",
+    "organism": "Pseudomonas aeruginosa SCV20267",
+    "ncbi_id": "NC_023149",
+    "phylum": "Pseudomonadota",
+    "genus": "Pseudomonas",
+    "num_prophages": 3,
+    "genome_length": 6725183,
+    "avg_mcc": 0.715,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "NC_000913",
+    "organism": "Escherichia coli K12",
+    "ncbi_id": "NC_000913",
+    "phylum": "",
+    "genus": "",
+    "num_prophages": 10,
+    "genome_length": 4641652,
+    "avg_mcc": 0.154,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "NC_000964",
+    "organism": "Bacillus subtilis subsp. subtilis str. 168",
+    "ncbi_id": "NC_000964",
+    "phylum": "",
+    "genus": "",
+    "num_prophages": 4,
+    "genome_length": 4215606,
+    "avg_mcc": 0.773,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "NC_002695",
+    "organism": "Escherichia coli O157:H7 str. Sakai",
+    "ncbi_id": "NC_002695",
+    "phylum": "",
+    "genus": "",
+    "num_prophages": 21,
+    "genome_length": 5498578,
+    "avg_mcc": 0.595,
+    "available_sizes": [
+      "2k"
+    ]
+  },
+  {
+    "assembly": "NC_003197",
+    "organism": "Salmonella typhimurium LT2",
+    "ncbi_id": "NC_003197",
+    "phylum": "",
+    "genus": "",
+    "num_prophages": 8,
+    "genome_length": 4857450,
+    "avg_mcc": 0.578,
+    "available_sizes": [
+      "2k"
+    ]
+  }
+]
