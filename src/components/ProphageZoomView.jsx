@@ -96,11 +96,11 @@ export default function ProphageZoomView({
             y0: 0,
             y1: pred.avg_score,
             fillcolor: survives
-              ? hexToRgba(color, 0.2)
+              ? hexToRgba(color, 0.3)
               : "rgba(180,180,180,0.1)",
             line: {
               color: survives ? color : "gray",
-              width: survives ? 1.0 : 0.5,
+              width: survives ? 1.5 : 0.5,
             },
             layer: "below",
           });
@@ -157,8 +157,8 @@ export default function ProphageZoomView({
             x1: clippedE,
             y0: 0,
             y1: pred.avg_score,
-            fillcolor: hexToRgba(color, 0.2),
-            line: { color: color, width: 1.0 },
+            fillcolor: hexToRgba(color, 0.3),
+            line: { color: color, width: 1.5 },
             layer: "below",
           });
         });
@@ -195,8 +195,8 @@ export default function ProphageZoomView({
           x1: pred.clippedE,
           y0: 0,
           y1: pred.avg_score,
-          fillcolor: "rgba(0,0,0,0)",
-          line: { color: color, width: 2.5 },
+          fillcolor: hexToRgba(color, 0.12),
+          line: { color: color, width: 3.5 },
           layer: "above",
         });
       });
@@ -224,7 +224,7 @@ export default function ProphageZoomView({
           }),
           marker: {
             color: color,
-            opacity: 0.75,
+            opacity: 0.3,
             line: { color: "white", width: 0.3 },
           },
           xaxis: "x",
