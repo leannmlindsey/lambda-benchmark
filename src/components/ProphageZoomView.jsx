@@ -345,7 +345,7 @@ export default function ProphageZoomView({
         const clippedS = Math.max(absStart, viewStart);
         const clippedE = Math.min(absEnd, viewEnd);
         if (clippedS >= clippedE) return;
-        allFeatures.push({ ...feat, clippedS, clippedE });
+        allFeatures.push({ ...feat, absStart, absEnd, clippedS, clippedE });
       });
     });
 
@@ -362,7 +362,7 @@ export default function ProphageZoomView({
           (f) =>
             `<b>${f.category}</b><br>` +
             `${f.product || "unknown"}<br>` +
-            `${f.start} - ${f.end}<extra></extra>`
+            `${formatBpExact(f.absStart)} - ${formatBpExact(f.absEnd)}<extra></extra>`
         ),
         showlegend: false,
       });
