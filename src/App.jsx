@@ -17,7 +17,7 @@ export default function App() {
   const [activeView, setActiveView] = useState("genome"); // "genome" | "prophage"
   const [selectedProphage, setSelectedProphage] = useState(null);
   const [phylumFilter, setPhylumFilter] = useState(new Set());
-  const [sortBy, setSortBy] = useState("organism");
+  const [sortBy, setSortBy] = useState("avg_mcc");
   const [showRawSignal, setShowRawSignal] = useState(false);
 
   // ── Load genome index ──────────────────────────────────────────────
