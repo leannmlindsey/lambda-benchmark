@@ -16,6 +16,8 @@ export default function ControlPanel({
   genomeData,
   showRawSignal,
   onToggleRawSignal,
+  showCandidates,
+  onToggleCandidates,
 }) {
   // Get unique phyla with counts
   const phylaInfo = useMemo(() => {
@@ -231,6 +233,17 @@ export default function ControlPanel({
           />
           Show raw per-segment signal
         </label>
+        {/* Candidate prophages toggle */}
+        {genomeData?.candidate_prophages?.length > 0 && (
+          <label className="raw-signal-toggle">
+            <input
+              type="checkbox"
+              checked={showCandidates}
+              onChange={onToggleCandidates}
+            />
+            Show candidate prophages ({genomeData.candidate_prophages.length})
+          </label>
+        )}
       </div>
 
       {/* Comparison Tools */}
