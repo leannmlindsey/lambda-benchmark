@@ -535,6 +535,10 @@ export default function ProphageZoomView({
           responsive: true,
           displayModeBar: true,
           scrollZoom: true,
+          toImageButtonOptions: {
+            format: "svg",
+            filename: `${genomeData?.assembly || "prophage"}_zoom`,
+          },
         }}
         onRelayout={handleRelayout}
         style={{ width: "100%" }}

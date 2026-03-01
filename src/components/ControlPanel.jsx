@@ -161,13 +161,26 @@ export default function ControlPanel({
       {/* Genome selector */}
       <div className="control-section">
         <h3>Genome ({filteredGenomes.length})</h3>
-        <input
-          type="text"
-          className="genome-search"
-          placeholder="Search by name or GCA..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            type="text"
+            className="genome-search"
+            placeholder="Search by name or GCA..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              style={{
+                position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
+                background: "none", border: "none", cursor: "pointer",
+                fontSize: 14, color: "#999", padding: "0 4px", lineHeight: 1,
+              }}
+              title="Clear search"
+            >&times;</button>
+          )}
+        </div>
         <select
           value={selectedAssembly || ""}
           onChange={(e) => onSelectAssembly(e.target.value)}

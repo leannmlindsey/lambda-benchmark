@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useRef } from "react";
-import { Plot, Plotly } from "../utils/plotly";
+import { Plot } from "../utils/plotly";
 import { getModelColor, getModelFilter, formatBp, formatBpExact, sortModels, isComparisonModel } from "../utils/constants";
 
 function hexToRgba(hex, alpha) {
@@ -203,7 +203,8 @@ export default function GenomeView({
 
       // Per-segment signal when raw signal toggle is on (step scatter — fast)
       if (showRawSignal && !isComparisonModel(modelLabel)) {
-        const segments = genomeData.per_segment?.[modelLabel] || [];
+        const segments = [...(genomeData.per_segment?.[modelLabel] || [])]
+          .sort((a, b) => (a[0] + a[1]) / 2 - (b[0] + b[1]) / 2);
 
         if (segments.length > 0) {
           traces.push({
@@ -319,49 +320,10 @@ export default function GenomeView({
     return { plotData: traces, layout: layoutObj };
   }, [genomeData, visibleModels, showRawSignal]);
 
-  const handleClick = useCallback(
-    (event) => {
-      const point = event.points?.[0];
-      if (point?.customdata != null) {
-        onClickProphage(point.customdata);
-      }
-    },
-    [onClickProphage]
-  );
+  const wrapperRef = useRef(null);
 
-  // Clamp x-axis to [0, genome_length] on zoom/pan
-  const isClampingRef = useRef(false);
-  const handleRelayout = useCallback(
-    (update) => {
-      // Skip if this relayout was triggered by our own clamping
-      if (isClampingRef.current) {
-        isClampingRef.current = false;
-        return;
-      }
-      if (!genomeData || !plotRef.current?.el) return;
-      const genomeLen = genomeData.genome_length;
-
-      // Get the new range from the update
-      let x0 = update["xaxis.range[0]"];
-      let x1 = update["xaxis.range[1]"];
-      // Also handle the array form from rangeslider
-      if (x0 == null && update["xaxis.range"]) {
-        x0 = update["xaxis.range"][0];
-        x1 = update["xaxis.range"][1];
-      }
-
-      if (x0 == null || x1 == null) return;
-
-      const needsClamp = x0 < 0 || x1 > genomeLen;
-      if (needsClamp) {
-        isClampingRef.current = true;
-        Plotly.relayout(plotRef.current.el, {
-          "xaxis.range": [Math.max(0, x0), Math.min(genomeLen, x1)],
-        });
-      }
-    },
-    [genomeData]
-  );
+  // Relayout handler (clamping handled natively by minallowed/maxallowed)
+  const handleRelayout = useCallback(() => {}, []);
 
   if (!genomeData) return null;
 
@@ -391,20 +353,50 @@ export default function GenomeView({
           </div>
         )}
       </div>
-      <Plot
-        ref={plotRef}
-        data={plotData}
-        layout={layout}
-        config={{
-          responsive: true,
-          displayModeBar: true,
-          modeBarButtonsToAdd: ["select2d", "lasso2d"],
-          scrollZoom: true,
-        }}
-        onClick={handleClick}
-        onRelayout={handleRelayout}
-        style={{ width: "100%" }}
-      />
+      <div ref={wrapperRef} onClickCapture={(e) => {
+        const plotDiv = wrapperRef.current?.querySelector(".js-plotly-plot");
+        if (!plotDiv?._fullLayout) return;
+        const fl = plotDiv._fullLayout;
+        const ya = fl.yaxis, xa = fl.xaxis;
+        if (!ya || !xa) return;
+        const bbox = plotDiv.getBoundingClientRect();
+        const cy = e.clientY - bbox.top;
+        const cx = e.clientX - bbox.left;
+        const gtTop = ya._offset, gtBot = ya._offset + ya._length;
+        if (cy >= gtTop && cy <= gtBot) {
+          const frac = (cx - xa._offset) / xa._length;
+          const dataX = xa.range[0] + frac * (xa.range[1] - xa.range[0]);
+          const gt = genomeData.ground_truth || [];
+          // Find nearest GT region
+          let bestIdx = -1, bestDist = Infinity;
+          for (let i = 0; i < gt.length; i++) {
+            const mid = (gt[i].start + gt[i].end) / 2;
+            const dist = Math.abs(dataX - mid);
+            if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+          }
+          if (bestIdx >= 0) {
+            onClickProphage(bestIdx);
+          }
+        }
+      }}>
+        <Plot
+          ref={plotRef}
+          data={plotData}
+          layout={layout}
+          config={{
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToAdd: ["select2d", "lasso2d"],
+            scrollZoom: true,
+            toImageButtonOptions: {
+              format: "svg",
+              filename: `${genomeData?.assembly || "genome"}_overview`,
+            },
+          }}
+          onRelayout={handleRelayout}
+          style={{ width: "100%" }}
+        />
+      </div>
     </div>
   );
 }

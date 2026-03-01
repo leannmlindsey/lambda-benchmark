@@ -10,6 +10,8 @@ export const MODEL_COLORS = {
   "Generanno": "#bbd473",
   "EVO": "#ffb354",
   "EVO2": "#ffcc8f",
+  "EVO2 LP": "#e6944c",
+  "EVO2+SAE": "#d4763a",
   // Comparison tools
   "geNomad": "#6A3D9A",
   "PhageBoost": "#B15928",
@@ -51,6 +53,8 @@ export const MODEL_ORDER = [
   "Generanno",
   "EVO",
   "EVO2",
+  "EVO2 LP",
+  "EVO2+SAE",
 ];
 
 // Comparison tool order for display
