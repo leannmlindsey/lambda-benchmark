@@ -19,7 +19,9 @@ export default function GenomeView({
   genomeData,
   visibleModels,
   showRawSignal,
+  showCandidates,
   onClickProphage,
+  onClickCandidate,
 }) {
   const plotRef = useRef(null);
 
@@ -81,7 +83,59 @@ export default function GenomeView({
       borderpad: 3,
     });
 
-    // ── Model rows (below GT) ────────────────────────────────────────
+    // ── Candidate prophage row (between GT and models) ──────────────
+    const candidateRegions = genomeData.candidate_prophages || [];
+    const showCandidateRow = showCandidates && candidateRegions.length > 0;
+    // Candidate axis comes after all model axes to avoid collision:
+    // GT = y, models = y2..y(nModels+1), candidate = y(nModels+2)
+    const candidateYAxisId = `y${nModels + 2}`;
+
+    if (showCandidateRow) {
+      traces.push({
+        type: "bar",
+        x: candidateRegions.map((c) => (c.start + c.end) / 2),
+        y: candidateRegions.map(() => 1),
+        width: candidateRegions.map((c) => c.end - c.start),
+        marker: { color: "rgba(80,80,80,0.7)" },
+        text: candidateRegions.map(
+          (c) => `${(c.size / 1000).toFixed(0)} kb`
+        ),
+        textposition: "inside",
+        textfont: { color: "white", size: 9 },
+        xaxis: "x",
+        yaxis: candidateYAxisId,
+        hovertemplate: candidateRegions.map(
+          (c) =>
+            `<b>Candidate #${c.candidate_id}</b><br>` +
+            `Classification: ${c.classification || "N/A"}<br>` +
+            `${formatBpExact(c.start)} - ${formatBpExact(c.end)}<br>` +
+            `Size: ${formatBpExact(c.size)}<br>` +
+            `Models: ${c.num_models} (${c.models_list})<br>` +
+            `Novel: ${c.novel_flag}<br>` +
+            `Structural: ${c.structural_pct != null ? c.structural_pct + "%" : "N/A"}<br>` +
+            `Evidence for: ${c.evidence_for_phage || "N/A"}<br>` +
+            `Evidence against: ${c.evidence_against_phage || "N/A"}` +
+            `<extra></extra>`
+        ),
+        showlegend: false,
+      });
+
+      annotations.push({
+        text: `Candidate Prophages (${candidateRegions.length}) — Click to zoom`,
+        xref: "paper",
+        yref: `${candidateYAxisId} domain`,
+        x: 0,
+        y: 0.5,
+        xanchor: "left",
+        yanchor: "middle",
+        showarrow: false,
+        font: { size: 10, color: "#333", family: "Arial" },
+        bgcolor: "rgba(255,255,255,0.85)",
+        borderpad: 3,
+      });
+    }
+
+    // ── Model rows (below GT and optional candidate row) ─────────────
     modelList.forEach((modelLabel, i) => {
       const yAxisId = `y${i + 2}`;
       const xAxisId = "x";
@@ -105,6 +159,24 @@ export default function GenomeView({
           layer: "below",
         });
       });
+
+      // Candidate prophage shading on this subplot
+      if (showCandidateRow) {
+        candidateRegions.forEach((c) => {
+          shapes.push({
+            type: "rect",
+            xref: xAxisId,
+            yref: yAxisId,
+            x0: c.start,
+            x1: c.end,
+            y0: 0,
+            y1: 1.05,
+            fillcolor: "rgba(100,100,200,0.06)",
+            line: { color: "rgba(100,100,200,0.15)", width: 0.5, dash: "dot" },
+            layer: "below",
+          });
+        });
+      }
 
       // Threshold line
       if (filter) {
@@ -258,13 +330,17 @@ export default function GenomeView({
     // ── Layout ───────────────────────────────────────────────────────
     const rowHeight = 120;
     const gtRowHeight = 50;
-    const totalHeight = rowHeight * nModels + gtRowHeight + 100;
+    const candidateRowHeight = 50;
+    const totalHeight = rowHeight * nModels + gtRowHeight
+      + (showCandidateRow ? candidateRowHeight : 0) + 100;
 
     const gap = 0.03;
     const gtFraction = gtRowHeight / totalHeight;
+    const candidateFraction = showCandidateRow ? candidateRowHeight / totalHeight : 0;
+    const headerFraction = gtFraction + candidateFraction + (showCandidateRow ? gap : 0);
     const modelFraction =
       nModels > 0
-        ? (1 - gtFraction - gap * (nModels + 1)) / nModels
+        ? (1 - headerFraction - gap * (nModels + 1)) / nModels
         : 0;
 
     const yAxes = {};
@@ -277,9 +353,22 @@ export default function GenomeView({
       showticklabels: false,
     };
 
-    // Model rows: below GT, top to bottom
+    // Candidate row: just below GT
+    if (showCandidateRow) {
+      const candTop = 1 - gtFraction - gap;
+      const candBottom = candTop - candidateFraction;
+      yAxes[`yaxis${nModels + 2}`] = {
+        domain: [Math.max(candBottom, 0), Math.max(candTop, 0)],
+        range: [0, 1.2],
+        fixedrange: true,
+        showticklabels: false,
+      };
+    }
+
+    // Model rows: below GT + candidate, top to bottom
+    const modelTopStart = 1 - headerFraction - gap;
     modelList.forEach((_, i) => {
-      const top = 1 - gtFraction - gap - i * (modelFraction + gap);
+      const top = modelTopStart - i * (modelFraction + gap);
       const bottom = top - modelFraction;
       yAxes[`yaxis${i + 2}`] = {
         domain: [Math.max(bottom, 0), Math.max(top, 0)],
@@ -318,7 +407,7 @@ export default function GenomeView({
     };
 
     return { plotData: traces, layout: layoutObj };
-  }, [genomeData, visibleModels, showRawSignal]);
+  }, [genomeData, visibleModels, showRawSignal, showCandidates]);
 
   const wrapperRef = useRef(null);
 
@@ -350,6 +439,20 @@ export default function GenomeView({
                 #{idx + 1} ({formatBp(gt.start)} – {formatBp(gt.end)})
               </button>
             ))}
+            {showCandidates && (genomeData.candidate_prophages || []).length > 0 && (
+              <>
+                <span className="prophage-buttons-label" style={{ marginLeft: 8 }}>Candidates:</span>
+                {genomeData.candidate_prophages.map((c) => (
+                  <button
+                    key={`cand-${c.candidate_id}`}
+                    className="candidate-btn"
+                    onClick={() => onClickCandidate(c.candidate_id)}
+                  >
+                    #{c.candidate_id} ({formatBp(c.start)} – {formatBp(c.end)})
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -376,6 +479,33 @@ export default function GenomeView({
           }
           if (bestIdx >= 0) {
             onClickProphage(bestIdx);
+            return;
+          }
+        }
+        // Candidate bar click detection
+        const candidates = genomeData.candidate_prophages || [];
+        const modelKeys = new Set(
+          Object.keys(genomeData.per_segment || {})
+            .concat(Object.keys(genomeData.clustered_predictions || {}))
+            .filter((m) => visibleModels.has(m))
+        );
+        const candYAxisKey = `yaxis${modelKeys.size + 2}`;
+        const candYA = fl[candYAxisKey];
+        if (candYA && onClickCandidate && candidates.length > 0) {
+          const candTop = candYA._offset;
+          const candBot = candYA._offset + candYA._length;
+          if (cy >= candTop && cy <= candBot) {
+            const frac = (cx - xa._offset) / xa._length;
+            const dataX = xa.range[0] + frac * (xa.range[1] - xa.range[0]);
+            let bestCand = null, bestDist = Infinity;
+            for (const c of candidates) {
+              const mid = (c.start + c.end) / 2;
+              const dist = Math.abs(dataX - mid);
+              if (dist < bestDist) { bestDist = dist; bestCand = c; }
+            }
+            if (bestCand) {
+              onClickCandidate(bestCand.candidate_id);
+            }
           }
         }
       }}>

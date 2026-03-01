@@ -27,14 +27,22 @@ function hexToRgba(hex, alpha) {
 export default function ProphageZoomView({
   genomeData,
   prophageIndex,
+  candidateRegion,
   visibleModels,
   onBack,
 }) {
-  const { plotData, layout } = useMemo(() => {
-    if (!genomeData || prophageIndex == null) return { plotData: [], layout: {} };
+  const isCandidate = candidateRegion != null;
 
-    const gt = genomeData.ground_truth[prophageIndex];
-    if (!gt) return { plotData: [], layout: {} };
+  const { plotData, layout } = useMemo(() => {
+    if (!genomeData) return { plotData: [], layout: {} };
+
+    // Determine region: GT mode or candidate mode
+    const region = isCandidate
+      ? { start: candidateRegion.start, end: candidateRegion.end }
+      : (prophageIndex != null ? genomeData.ground_truth[prophageIndex] : null);
+    if (!region) return { plotData: [], layout: {} };
+
+    const gt = region;
 
     const viewStart = Math.max(0, gt.start - PADDING);
     const viewEnd = gt.end + PADDING;
@@ -261,38 +269,63 @@ export default function ProphageZoomView({
     // ── PHROG annotation row ─────────────────────────────────────────
     const phrogYAxis = nModels === 0 ? "y" : `y${nModels + 1}`;
 
-    // Find matching PHROG annotations for this GT region
-    const phrogAnnotations = genomeData.phrog_annotations || [];
-    const matchingPhrog = phrogAnnotations.filter((p) => {
-      if (p.prophage_start == null) return false;
-      return (
-        Math.max(p.prophage_start, gt.start) <
-        Math.min(p.prophage_end, gt.end)
-      );
-    });
+    // Find matching PHROG annotations for this region
+    // In candidate mode, use phrog_features directly from candidateRegion
+    // In GT mode, use genomeData.phrog_annotations matched by coordinate overlap
+    let allPhrogFeatures = []; // array of {absStart, absEnd, category, product}
+
+    if (isCandidate) {
+      // Candidate mode: features are relative to candidate start
+      (candidateRegion.phrog_features || []).forEach((feat) => {
+        const absStart = candidateRegion.start + feat.start;
+        const absEnd = candidateRegion.start + feat.end;
+        allPhrogFeatures.push({
+          absStart,
+          absEnd,
+          category: feat.category,
+          product: feat.product,
+        });
+      });
+    } else {
+      // GT mode: match phrog_annotations by coordinate overlap
+      const phrogAnnotations = genomeData.phrog_annotations || [];
+      const matchingPhrog = phrogAnnotations.filter((p) => {
+        if (p.prophage_start == null) return false;
+        return (
+          Math.max(p.prophage_start, gt.start) <
+          Math.min(p.prophage_end, gt.end)
+        );
+      });
+      matchingPhrog.forEach((pdata) => {
+        (pdata.features || []).forEach((feat) => {
+          allPhrogFeatures.push({
+            absStart: pdata.prophage_start + feat.start - 1,
+            absEnd: pdata.prophage_start + feat.end - 1,
+            category: feat.category,
+            product: feat.product,
+          });
+        });
+      });
+    }
 
     // Draw PHROG feature blocks as shapes
-    matchingPhrog.forEach((pdata) => {
-      (pdata.features || []).forEach((feat) => {
-        const absStart = pdata.prophage_start + feat.start - 1;
-        const absEnd = pdata.prophage_start + feat.end - 1;
-        const clippedS = Math.max(absStart, viewStart);
-        const clippedE = Math.min(absEnd, viewEnd);
-        if (clippedS >= clippedE) return;
+    allPhrogFeatures.forEach((feat) => {
+      const clippedS = Math.max(feat.absStart, viewStart);
+      const clippedE = Math.min(feat.absEnd, viewEnd);
+      if (clippedS >= clippedE) return;
 
-        const catColor = CATEGORY_COLORS[feat.category] || "#999999";
+      const catColor = CATEGORY_COLORS[feat.category] || "#999999";
 
-        shapes.push({
-          type: "rect",
-          xref: "x",
-          yref: phrogYAxis,
-          x0: clippedS,
-          x1: clippedE,
-          y0: -0.45,
-          y1: 0.45,
-          fillcolor: catColor,
-          line: { color: "white", width: 0.3 },
-        });
+      shapes.push({
+        type: "rect",
+        xref: "x",
+        yref: phrogYAxis,
+        x0: clippedS,
+        x1: clippedE,
+        y0: -0.45,
+        y1: 0.45,
+        fillcolor: catColor,
+        line: { color: "white", width: 0.3 },
       });
     });
 
@@ -337,28 +370,24 @@ export default function ProphageZoomView({
     });
 
     // Also add invisible bar trace for PHROG hover
-    const allFeatures = [];
-    matchingPhrog.forEach((pdata) => {
-      (pdata.features || []).forEach((feat) => {
-        const absStart = pdata.prophage_start + feat.start - 1;
-        const absEnd = pdata.prophage_start + feat.end - 1;
-        const clippedS = Math.max(absStart, viewStart);
-        const clippedE = Math.min(absEnd, viewEnd);
-        if (clippedS >= clippedE) return;
-        allFeatures.push({ ...feat, absStart, absEnd, clippedS, clippedE });
-      });
-    });
+    const visibleFeatures = allPhrogFeatures
+      .map((f) => ({
+        ...f,
+        clippedS: Math.max(f.absStart, viewStart),
+        clippedE: Math.min(f.absEnd, viewEnd),
+      }))
+      .filter((f) => f.clippedS < f.clippedE);
 
-    if (allFeatures.length > 0) {
+    if (visibleFeatures.length > 0) {
       traces.push({
         type: "bar",
-        x: allFeatures.map((f) => (f.clippedS + f.clippedE) / 2),
-        y: allFeatures.map(() => 0.9),
-        width: allFeatures.map((f) => f.clippedE - f.clippedS),
+        x: visibleFeatures.map((f) => (f.clippedS + f.clippedE) / 2),
+        y: visibleFeatures.map(() => 0.9),
+        width: visibleFeatures.map((f) => f.clippedE - f.clippedS),
         marker: { color: "rgba(0,0,0,0)" }, // invisible - shapes provide the color
         xaxis: "x",
         yaxis: phrogYAxis,
-        hovertemplate: allFeatures.map(
+        hovertemplate: visibleFeatures.map(
           (f) =>
             `<b>${f.category}</b><br>` +
             `${f.product || "unknown"}<br>` +
@@ -403,7 +432,18 @@ export default function ProphageZoomView({
       };
     });
 
-    const prophageLen = gt.end - gt.start;
+    const regionLen = gt.end - gt.start;
+    const titleText = isCandidate
+      ? `Candidate #${candidateRegion.candidate_id}: ` +
+        `${gt.start.toLocaleString()} – ${gt.end.toLocaleString()} bp ` +
+        `(${(regionLen / 1000).toFixed(1)} kb)  |  ` +
+        `${candidateRegion.classification || "Unclassified"}  |  ` +
+        `+/- ${(PADDING / 1000).toFixed(0)} kb padding`
+      : `Prophage region ${prophageIndex + 1}: ` +
+        `${gt.start.toLocaleString()} – ${gt.end.toLocaleString()} bp ` +
+        `(${(regionLen / 1000).toFixed(1)} kb)  |  ` +
+        `+/- ${(PADDING / 1000).toFixed(0)} kb padding`;
+
     const layoutObj = {
       ...yAxes,
       xaxis: {
@@ -430,31 +470,29 @@ export default function ProphageZoomView({
       dragmode: "pan",
       hovermode: "closest",
       title: {
-        text:
-          `Prophage region ${prophageIndex + 1}: ` +
-          `${gt.start.toLocaleString()} – ${gt.end.toLocaleString()} bp ` +
-          `(${(prophageLen / 1000).toFixed(1)} kb)  |  ` +
-          `+/- ${(PADDING / 1000).toFixed(0)} kb padding`,
+        text: titleText,
         font: { size: 13 },
       },
     };
 
     return { plotData: traces, layout: layoutObj };
-  }, [genomeData, prophageIndex, visibleModels]);
+  }, [genomeData, prophageIndex, visibleModels, isCandidate, candidateRegion]);
 
   const plotRef = useRef(null);
   const isClampingRef = useRef(false);
 
   // Compute view bounds for clamping (must match useMemo)
   const viewBounds = useMemo(() => {
-    if (!genomeData || prophageIndex == null) return null;
-    const gt = genomeData.ground_truth[prophageIndex];
-    if (!gt) return null;
+    if (!genomeData) return null;
+    const region = isCandidate
+      ? { start: candidateRegion.start, end: candidateRegion.end }
+      : (prophageIndex != null ? genomeData.ground_truth[prophageIndex] : null);
+    if (!region) return null;
     return {
-      start: Math.max(0, gt.start - PADDING),
-      end: gt.end + PADDING,
+      start: Math.max(0, region.start - PADDING),
+      end: region.end + PADDING,
     };
-  }, [genomeData, prophageIndex]);
+  }, [genomeData, prophageIndex, isCandidate, candidateRegion]);
 
   const handleRelayout = useCallback(
     (update) => {
@@ -482,7 +520,7 @@ export default function ProphageZoomView({
     [viewBounds]
   );
 
-  if (!genomeData || prophageIndex == null) return null;
+  if (!genomeData || (!isCandidate && prophageIndex == null)) return null;
 
   // Build PHROG legend
   const phrogCategories = Object.entries(CATEGORY_COLORS);
@@ -497,10 +535,37 @@ export default function ProphageZoomView({
         <div className="organism">{genomeData.organism}</div>
         <div className="details">
           {genomeData.assembly} &mdash;{" "}
-          Prophage {prophageIndex + 1} of{" "}
-          {genomeData.ground_truth?.length || 0}
+          {isCandidate
+            ? `Candidate #${candidateRegion.candidate_id}`
+            : `Prophage ${prophageIndex + 1} of ${genomeData.ground_truth?.length || 0}`}
           {genomeData.taxonomy?.phylum && ` — ${genomeData.taxonomy.phylum} (GTDB)`}
         </div>
+        {isCandidate && candidateRegion && (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "auto 1fr",
+            gap: "2px 12px",
+            fontSize: "12px",
+            color: "#444",
+            marginTop: "4px",
+            lineHeight: 1.4,
+          }}>
+            <span style={{ fontWeight: 600 }}>Classification:</span>
+            <span>{candidateRegion.classification || "N/A"}</span>
+            <span style={{ fontWeight: 600 }}>Size:</span>
+            <span>{formatBpExact(candidateRegion.size)}</span>
+            <span style={{ fontWeight: 600 }}>Models:</span>
+            <span>{candidateRegion.num_models} ({candidateRegion.models_list})</span>
+            <span style={{ fontWeight: 600 }}>Novel:</span>
+            <span>{candidateRegion.novel_flag}</span>
+            <span style={{ fontWeight: 600 }}>Structural:</span>
+            <span>{candidateRegion.structural_pct != null ? candidateRegion.structural_pct + "%" : "N/A"}</span>
+            <span style={{ fontWeight: 600 }}>Evidence for phage:</span>
+            <span>{candidateRegion.evidence_for_phage || "N/A"}</span>
+            <span style={{ fontWeight: 600 }}>Evidence against phage:</span>
+            <span>{candidateRegion.evidence_against_phage || "N/A"}</span>
+          </div>
+        )}
       </div>
 
       {/* PHROG category legend */}

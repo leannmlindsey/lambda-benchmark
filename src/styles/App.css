@@ -313,3 +313,18 @@ body {
   background: #02afbd;
   color: #fff;
 }
+
+.candidate-btn {
+  padding: 3px 10px;
+  border: 1px solid #888;
+  border-radius: 3px;
+  background: #fff;
+  color: #555;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.candidate-btn:hover {
+  background: #888;
+  color: #fff;
+}

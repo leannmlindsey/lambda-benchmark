@@ -14,11 +14,13 @@ export default function App() {
   const [selectedAssembly, setSelectedAssembly] = useState(null);
   const [windowSize, setWindowSize] = useState("2k");
   const [visibleModels, setVisibleModels] = useState(new Set());
-  const [activeView, setActiveView] = useState("genome"); // "genome" | "prophage"
+  const [activeView, setActiveView] = useState("genome"); // "genome" | "prophage" | "candidate"
   const [selectedProphage, setSelectedProphage] = useState(null);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [phylumFilter, setPhylumFilter] = useState(new Set());
   const [sortBy, setSortBy] = useState("avg_mcc");
   const [showRawSignal, setShowRawSignal] = useState(false);
+  const [showCandidates, setShowCandidates] = useState(false);
 
   // ── Load genome index ──────────────────────────────────────────────
   useEffect(() => {
@@ -92,6 +94,7 @@ export default function App() {
     setSelectedAssembly(asm);
     setActiveView("genome");
     setSelectedProphage(null);
+    setSelectedCandidate(null);
   }, []);
 
   const handleToggleModel = useCallback((label) => {
@@ -120,12 +123,20 @@ export default function App() {
 
   const handleClickProphage = useCallback((index) => {
     setSelectedProphage(index);
+    setSelectedCandidate(null);
     setActiveView("prophage");
+  }, []);
+
+  const handleClickCandidate = useCallback((candidateId) => {
+    setSelectedCandidate(candidateId);
+    setSelectedProphage(null);
+    setActiveView("candidate");
   }, []);
 
   const handleBackToGenome = useCallback(() => {
     setActiveView("genome");
     setSelectedProphage(null);
+    setSelectedCandidate(null);
   }, []);
 
   // ── Render ─────────────────────────────────────────────────────────
@@ -148,6 +159,8 @@ export default function App() {
           genomeData={genomeData}
           showRawSignal={showRawSignal}
           onToggleRawSignal={() => setShowRawSignal((v) => !v)}
+          showCandidates={showCandidates}
+          onToggleCandidates={() => setShowCandidates((v) => !v)}
         />
         <div className="viz-area">
           {loading && <div className="loading">Loading genome data...</div>}
@@ -163,7 +176,9 @@ export default function App() {
               genomeData={genomeData}
               visibleModels={visibleModels}
               showRawSignal={showRawSignal}
+              showCandidates={showCandidates}
               onClickProphage={handleClickProphage}
+              onClickCandidate={handleClickCandidate}
             />
           )}
           {!loading &&
@@ -174,6 +189,23 @@ export default function App() {
               <ProphageZoomView
                 genomeData={genomeData}
                 prophageIndex={selectedProphage}
+                visibleModels={visibleModels}
+                onBack={handleBackToGenome}
+              />
+            )}
+          {!loading &&
+            !error &&
+            genomeData &&
+            activeView === "candidate" &&
+            selectedCandidate != null && (
+              <ProphageZoomView
+                genomeData={genomeData}
+                prophageIndex={null}
+                candidateRegion={
+                  (genomeData.candidate_prophages || []).find(
+                    (c) => c.candidate_id === selectedCandidate
+                  ) || null
+                }
                 visibleModels={visibleModels}
                 onBack={handleBackToGenome}
               />
