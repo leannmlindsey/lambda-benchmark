@@ -29,6 +29,7 @@ export default function ProphageZoomView({
   prophageIndex,
   candidateRegion,
   visibleModels,
+  showMetrics,
   onBack,
 }) {
   const isCandidate = candidateRegion != null;
@@ -66,6 +67,7 @@ export default function ProphageZoomView({
       const filter = getModelFilter(modelLabel);
       const clustered = genomeData.clustered_predictions?.[modelLabel] || [];
       const segments = genomeData.per_segment?.[modelLabel] || [];
+      const metrics = genomeData.metrics?.[modelLabel];
 
       // GT region shading
       shapes.push({
@@ -249,21 +251,42 @@ export default function ProphageZoomView({
       }
 
       // Model label
-      const labelText = modelLabel;
-
       annotations.push({
-        text: labelText,
+        text: `<b>${modelLabel}</b>`,
         xref: "paper",
         yref: `${yAxisId} domain`,
         x: 0,
-        y: 1,
+        y: 0,
         xanchor: "left",
-        yanchor: "top",
+        yanchor: "bottom",
         showarrow: false,
-        font: { size: 10, color: "#333", family: "Arial" },
+        font: { size: 28, color: "#333", family: "Arial" },
         bgcolor: "rgba(255,255,255,0.85)",
-        borderpad: 3,
+        borderpad: 2,
       });
+
+      // Metrics — italic, below the subplot
+      if (showMetrics && metrics) {
+        const safeFixed = (v, d = 2) => {
+          const n = Number(v);
+          return v != null && v !== "" && !isNaN(n) ? n.toFixed(d) : "N/A";
+        };
+        const mcc = safeFixed(metrics.filt_mcc);
+        const rec = safeFixed(metrics.filt_recall);
+        const prec = safeFixed(metrics.filt_precision);
+        annotations.push({
+          text: `<i>MCC=${mcc}   Recall=${rec}   Prec=${prec}</i>`,
+          xref: "paper",
+          yref: `${yAxisId} domain`,
+          x: 0,
+          y: -0.15,
+          xanchor: "left",
+          yanchor: "top",
+          showarrow: false,
+          font: { size: 24, color: "#333", family: "Arial" },
+          borderpad: 1,
+        });
+      }
     });
 
     // ── PHROG annotation row ─────────────────────────────────────────
@@ -356,15 +379,15 @@ export default function ProphageZoomView({
     });
 
     annotations.push({
-      text: "PHROG Annotations",
+      text: "<b>PHROG Annotations</b>",
       xref: "paper",
       yref: `${phrogYAxis} domain`,
       x: 0,
-      y: 0.5,
+      y: 0,
       xanchor: "left",
-      yanchor: "middle",
+      yanchor: "bottom",
       showarrow: false,
-      font: { size: 10, color: "#333", family: "Arial", weight: "bold" },
+      font: { size: 28, color: "#333", family: "Arial" },
       bgcolor: "rgba(255,255,255,0.85)",
       borderpad: 3,
     });
@@ -397,10 +420,27 @@ export default function ProphageZoomView({
       });
     }
 
+    // PHROG category legend (inside chart, centered above PHROG row)
+    const legendParts = Object.entries(CATEGORY_COLORS).map(
+      ([cat, col]) => `<span style="color:${col}">&#9632;</span> ${cat}`
+    );
+    annotations.push({
+      text: legendParts.join("&nbsp;&nbsp;&nbsp;"),
+      xref: "paper",
+      yref: "paper",
+      x: 0.5,
+      y: 1,
+      xanchor: "center",
+      yanchor: "bottom",
+      showarrow: false,
+      font: { size: 18, color: "#333", family: "Arial" },
+      borderpad: 4,
+    });
+
     // ── Layout ───────────────────────────────────────────────────────
     const rowHeight = 120;
-    const phrogHeight = 60;
-    const totalHeight = rowHeight * nModels + phrogHeight + 120;
+    const phrogHeight = 50;
+    const totalHeight = rowHeight * nModels + phrogHeight + 100;
 
     const gap = 0.03;
     const phrogFraction = phrogHeight / totalHeight;
@@ -432,18 +472,6 @@ export default function ProphageZoomView({
       };
     });
 
-    const regionLen = gt.end - gt.start;
-    const titleText = isCandidate
-      ? `Candidate #${candidateRegion.candidate_id}: ` +
-        `${gt.start.toLocaleString()} – ${gt.end.toLocaleString()} bp ` +
-        `(${(regionLen / 1000).toFixed(1)} kb)  |  ` +
-        `${candidateRegion.classification || "Unclassified"}  |  ` +
-        `+/- ${(PADDING / 1000).toFixed(0)} kb padding`
-      : `Prophage region ${prophageIndex + 1}: ` +
-        `${gt.start.toLocaleString()} – ${gt.end.toLocaleString()} bp ` +
-        `(${(regionLen / 1000).toFixed(1)} kb)  |  ` +
-        `+/- ${(PADDING / 1000).toFixed(0)} kb padding`;
-
     const layoutObj = {
       ...yAxes,
       xaxis: {
@@ -454,29 +482,25 @@ export default function ProphageZoomView({
         showgrid: false,
         showticklabels: true,
         tickformat: ",d",
-        tickfont: { size: 10 },
+        tickfont: { size: 18 },
         title: {
           text: "Genomic Position (bp)",
-          font: { size: 12 },
+          font: { size: 20 },
         },
         side: "bottom",
         rangeslider: { visible: true, thickness: 0.06 },
       },
-      height: Math.max(totalHeight, 400),
-      margin: { l: 10, r: 10, t: 50, b: 60 },
+      height: Math.max(totalHeight, 300),
+      margin: { l: 20, r: 10, t: 50, b: 60 },
       shapes,
       annotations,
       barmode: "overlay",
       dragmode: "pan",
       hovermode: "closest",
-      title: {
-        text: titleText,
-        font: { size: 13 },
-      },
     };
 
     return { plotData: traces, layout: layoutObj };
-  }, [genomeData, prophageIndex, visibleModels, isCandidate, candidateRegion]);
+  }, [genomeData, prophageIndex, visibleModels, isCandidate, candidateRegion, showMetrics]);
 
   const plotRef = useRef(null);
   const isClampingRef = useRef(false);
@@ -522,9 +546,6 @@ export default function ProphageZoomView({
 
   if (!genomeData || (!isCandidate && prophageIndex == null)) return null;
 
-  // Build PHROG legend
-  const phrogCategories = Object.entries(CATEGORY_COLORS);
-
   return (
     <div>
       <button className="back-btn" onClick={onBack}>
@@ -545,7 +566,7 @@ export default function ProphageZoomView({
             display: "grid",
             gridTemplateColumns: "auto 1fr",
             gap: "2px 12px",
-            fontSize: "12px",
+            fontSize: "20px",
             color: "#444",
             marginTop: "4px",
             lineHeight: 1.4,
@@ -568,30 +589,6 @@ export default function ProphageZoomView({
         )}
       </div>
 
-      {/* PHROG category legend */}
-      <div style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "8px",
-        padding: "6px 4px 2px",
-        fontSize: "11px",
-      }}>
-        <span style={{ fontWeight: 600, fontSize: "11px", color: "#333" }}>PHROG categories:</span>
-        {phrogCategories.map(([cat, color]) => (
-          <span key={cat} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <span style={{
-              width: 12,
-              height: 12,
-              backgroundColor: color,
-              borderRadius: 2,
-              display: "inline-block",
-              flexShrink: 0,
-            }} />
-            {cat}
-          </span>
-        ))}
-      </div>
-
       <Plot
         ref={plotRef}
         data={plotData}
@@ -599,11 +596,24 @@ export default function ProphageZoomView({
         config={{
           responsive: true,
           displayModeBar: true,
+          modeBarButtonsToRemove: ["toImage"],
+          modeBarButtonsToAdd: [
+            {
+              name: "Download as SVG",
+              icon: Plotly.Icons.camera,
+              click: (gd) => {
+                const filename = isCandidate
+                  ? `${genomeData?.assembly || "prophage"}_candidate${candidateRegion?.candidate_id}`
+                  : `${genomeData?.assembly || "prophage"}_prophage${(prophageIndex || 0) + 1}`;
+                Plotly.relayout(gd, { "xaxis.rangeslider.visible": false }).then(() => {
+                  return Plotly.downloadImage(gd, { format: "svg", filename });
+                }).then(() => {
+                  Plotly.relayout(gd, { "xaxis.rangeslider.visible": true, "xaxis.rangeslider.thickness": 0.06 });
+                });
+              },
+            },
+          ],
           scrollZoom: true,
-          toImageButtonOptions: {
-            format: "svg",
-            filename: `${genomeData?.assembly || "prophage"}_zoom`,
-          },
         }}
         onRelayout={handleRelayout}
         style={{ width: "100%" }}

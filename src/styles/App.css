@@ -31,8 +31,8 @@ body {
 }
 
 .header-logo {
-  height: 72px;
-  width: 72px;
+  height: 90px;
+  width: 90px;
   flex-shrink: 0;
 }
 
@@ -41,20 +41,31 @@ body {
 }
 
 .header h1 {
-  font-size: 16px;
+  font-size: 28px;
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   color: #02afbd;
 }
 
 .header .citation {
-  font-size: 13px;
+  font-size: 24px;
   color: #d0d8e8;
   margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.header .citation a {
+  color: #02afbd;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.header .citation a:hover {
+  text-decoration: underline;
 }
 
 .header p {
-  font-size: 12.5px;
+  font-size: 20px;
   color: #b0b8c8;
   line-height: 1.4;
 }
@@ -66,45 +77,114 @@ body {
 }
 
 /* ── Left Panel ──────────────────────────────────────────────────── */
+/* Wide screens: panel participates in layout, animates width to push viz over */
 .control-panel {
-  width: 290px;
-  min-width: 290px;
+  width: 0;
+  min-width: 0;
   background: #fff;
   border-right: 1px solid #e0e0e0;
-  padding: 16px;
-  overflow-y: auto;
+  padding: 0;
+  overflow: hidden;
   flex-shrink: 0;
+  transition: width 0.25s ease-out, padding 0.25s ease-out;
+}
+
+.control-panel.open {
+  width: 440px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.panel-backdrop {
+  display: none;
+}
+
+.panel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 34px;
+  height: 64px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  background: #fff;
+  color: #2a2a4e;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.panel-toggle:hover {
+  background: #f4f4f8;
+}
+
+/* Narrow screens: panel becomes a fixed overlay drawer so it doesn't squeeze the viz */
+@media (max-width: 900px) {
+  .control-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 85vw;
+    max-width: 440px;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease-out;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .control-panel.open {
+    width: 85vw;
+    transform: translateX(0);
+  }
+
+  .panel-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 30;
+  }
 }
 
 .control-section {
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .control-section h3 {
-  font-size: 11px;
+  font-size: 22px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #666;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: 600;
 }
 
 .control-section select {
   width: 100%;
-  padding: 7px 8px;
+  padding: 10px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 12.5px;
+  font-size: 22px;
   background: #fff;
 }
 
 .genome-search {
   width: 100%;
-  padding: 6px 8px;
+  padding: 10px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 12px;
-  margin-bottom: 6px;
+  font-size: 22px;
+  margin-bottom: 8px;
 }
 
 .genome-search:focus {
@@ -123,27 +203,27 @@ body {
 .model-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-  font-size: 12px;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 22px;
 }
 
 .model-toggle input[type="checkbox"] {
   accent-color: var(--model-color, #999);
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
 }
 
 .model-color-dot {
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .model-header-mcc {
   float: right;
-  font-size: 10px;
+  font-size: 20px;
   font-weight: 400;
   color: #888;
   text-transform: none;
@@ -153,7 +233,7 @@ body {
 .model-toggle .model-mcc {
   margin-left: auto;
   color: #888;
-  font-size: 11px;
+  font-size: 20px;
 }
 
 /* Comparison tools section separator */
@@ -167,43 +247,43 @@ body {
 .raw-signal-toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 8px;
+  font-size: 22px;
   cursor: pointer;
 }
 
 .raw-signal-toggle input[type="checkbox"] {
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Taxonomy checkboxes */
 .taxonomy-checkbox {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 0;
-  font-size: 12px;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 22px;
 }
 
 .taxonomy-checkbox span {
   color: #888;
-  font-size: 11px;
+  font-size: 20px;
 }
 
 /* Sort controls */
 .sort-controls {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .sort-btn {
-  padding: 4px 8px;
+  padding: 6px 12px;
   border: 1px solid #ddd;
   border-radius: 3px;
   background: #fff;
-  font-size: 11px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -227,7 +307,7 @@ body {
   justify-content: center;
   height: 200px;
   color: #888;
-  font-size: 14px;
+  font-size: 24px;
 }
 
 .error-msg {
@@ -236,6 +316,7 @@ body {
   background: #fdf0ee;
   border-radius: 6px;
   margin: 20px;
+  font-size: 22px;
 }
 
 .empty-state {
@@ -244,20 +325,20 @@ body {
   justify-content: center;
   height: 300px;
   color: #aaa;
-  font-size: 15px;
+  font-size: 24px;
 }
 
 /* ── Back button ─────────────────────────────────────────────────── */
 .back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: 8px;
+  padding: 8px 18px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   background: #fff;
-  font-size: 12.5px;
+  font-size: 22px;
   cursor: pointer;
   color: #333;
 }
@@ -271,9 +352,9 @@ body {
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  padding: 10px 16px;
+  padding: 12px 18px;
   margin-bottom: 10px;
-  font-size: 13px;
+  font-size: 24px;
 }
 
 .genome-info .organism {
@@ -282,7 +363,7 @@ body {
 
 .genome-info .details {
   color: #666;
-  font-size: 12px;
+  font-size: 22px;
   margin-top: 2px;
 }
 
@@ -290,22 +371,22 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   margin-top: 6px;
 }
 
 .prophage-buttons-label {
-  font-size: 12px;
+  font-size: 22px;
   color: #666;
 }
 
 .prophage-btn {
-  padding: 3px 10px;
+  padding: 5px 14px;
   border: 1px solid #02afbd;
   border-radius: 3px;
   background: #fff;
   color: #02afbd;
-  font-size: 11px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -315,12 +396,12 @@ body {
 }
 
 .candidate-btn {
-  padding: 3px 10px;
+  padding: 5px 14px;
   border: 1px solid #888;
   border-radius: 3px;
   background: #fff;
   color: #555;
-  font-size: 11px;
+  font-size: 20px;
   cursor: pointer;
 }
 

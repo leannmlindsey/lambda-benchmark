@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { getModelColor, sortModels, sortComparisonModels, isComparisonModel } from "../utils/constants";
 
 export default function ControlPanel({
+  isPanelOpen,
   genomeList,
   selectedAssembly,
   onSelectAssembly,
@@ -18,6 +19,8 @@ export default function ControlPanel({
   onToggleRawSignal,
   showCandidates,
   onToggleCandidates,
+  showMetrics,
+  onToggleMetrics,
 }) {
   // Get unique phyla with counts
   const phylaInfo = useMemo(() => {
@@ -109,7 +112,7 @@ export default function ControlPanel({
   }, [genomeData]);
 
   return (
-    <div className="control-panel">
+    <div className={`control-panel${isPanelOpen ? " open" : ""}`}>
       {/* Window size */}
       {availableSizes.length > 1 && (
         <div className="control-section">
@@ -224,6 +227,15 @@ export default function ControlPanel({
             </label>
           );
         })}
+        {/* Metrics toggle */}
+        <label className="raw-signal-toggle">
+          <input
+            type="checkbox"
+            checked={showMetrics}
+            onChange={onToggleMetrics}
+          />
+          Show metrics (MCC, Recall, Precision)
+        </label>
         {/* Raw signal toggle — only applies to gLMs */}
         <label className="raw-signal-toggle">
           <input

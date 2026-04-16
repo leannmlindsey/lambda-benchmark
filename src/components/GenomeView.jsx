@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useRef } from "react";
-import { Plot } from "../utils/plotly";
+import { Plot, Plotly } from "../utils/plotly";
 import { getModelColor, getModelFilter, formatBp, formatBpExact, sortModels, isComparisonModel } from "../utils/constants";
 
 function hexToRgba(hex, alpha) {
@@ -20,6 +20,7 @@ export default function GenomeView({
   visibleModels,
   showRawSignal,
   showCandidates,
+  showMetrics,
   onClickProphage,
   onClickCandidate,
 }) {
@@ -54,7 +55,7 @@ export default function GenomeView({
           (gt) => `${((gt.end - gt.start) / 1000).toFixed(0)} kb`
         ),
         textposition: "inside",
-        textfont: { color: "white", size: 9 },
+        textfont: { color: "white", size: 16 },
         xaxis: "x",
         yaxis: gtYAxis,
         hovertemplate: gtRegions.map(
@@ -70,15 +71,15 @@ export default function GenomeView({
     }
 
     annotations.push({
-      text: "Ground Truth (Click on a prophage to Zoom in)",
+      text: "<b>Reference Prophages</b>",
       xref: "paper",
       yref: `${gtYAxis} domain`,
       x: 0,
-      y: 0.5,
+      y: 0,
       xanchor: "left",
-      yanchor: "middle",
+      yanchor: "bottom",
       showarrow: false,
-      font: { size: 10, color: "#333", family: "Arial" },
+      font: { size: 28, color: "#333", family: "Arial" },
       bgcolor: "rgba(255,255,255,0.85)",
       borderpad: 3,
     });
@@ -101,7 +102,7 @@ export default function GenomeView({
           (c) => `${(c.size / 1000).toFixed(0)} kb`
         ),
         textposition: "inside",
-        textfont: { color: "white", size: 9 },
+        textfont: { color: "white", size: 16 },
         xaxis: "x",
         yaxis: candidateYAxisId,
         hovertemplate: candidateRegions.map(
@@ -121,15 +122,15 @@ export default function GenomeView({
       });
 
       annotations.push({
-        text: `Candidate Prophages (${candidateRegions.length}) — Click to zoom`,
+        text: `<b>Candidates</b> (${candidateRegions.length})`,
         xref: "paper",
         yref: `${candidateYAxisId} domain`,
         x: 0,
-        y: 0.5,
+        y: 1,
         xanchor: "left",
-        yanchor: "middle",
+        yanchor: "top",
         showarrow: false,
-        font: { size: 10, color: "#333", family: "Arial" },
+        font: { size: 28, color: "#333", family: "Arial" },
         bgcolor: "rgba(255,255,255,0.85)",
         borderpad: 3,
       });
@@ -304,27 +305,39 @@ export default function GenomeView({
         return v != null && v !== "" && !isNaN(n) ? n.toFixed(d) : "N/A";
       };
 
-      let labelText = modelLabel;
-      if (!isComparisonModel(modelLabel) && metrics) {
-        const mcc = safeFixed(metrics.filt_mcc);
-        const rec = safeFixed(metrics.filt_recall);
-        const prec = safeFixed(metrics.filt_precision);
-        labelText += `   MCC=${mcc}  Recall=${rec}  Prec=${prec}`;
-      }
-
+      // Model name — large label
       annotations.push({
-        text: labelText,
+        text: `<b>${modelLabel}</b>`,
         xref: "paper",
         yref: `${yAxisId} domain`,
         x: 0,
-        y: 1,
+        y: 0,
         xanchor: "left",
-        yanchor: "top",
+        yanchor: "bottom",
         showarrow: false,
-        font: { size: 10, color: "#333", family: "Arial" },
+        font: { size: 28, color: "#333", family: "Arial" },
         bgcolor: "rgba(255,255,255,0.85)",
-        borderpad: 3,
+        borderpad: 2,
       });
+
+      // Metrics — italic, below the subplot
+      if (showMetrics && metrics) {
+        const mcc = safeFixed(metrics.filt_mcc);
+        const rec = safeFixed(metrics.filt_recall);
+        const prec = safeFixed(metrics.filt_precision);
+        annotations.push({
+          text: `<i>MCC=${mcc}   Recall=${rec}   Prec=${prec}</i>`,
+          xref: "paper",
+          yref: `${yAxisId} domain`,
+          x: 0,
+          y: -0.15,
+          xanchor: "left",
+          yanchor: "top",
+          showarrow: false,
+          font: { size: 24, color: "#333", family: "Arial" },
+          borderpad: 1,
+        });
+      }
     });
 
     // ── Layout ───────────────────────────────────────────────────────
@@ -391,13 +404,13 @@ export default function GenomeView({
         showgrid: false,
         showticklabels: true,
         tickformat: ",d",
-        tickfont: { size: 10 },
-        title: { text: "Genomic Position (bp)", font: { size: 12 } },
+        tickfont: { size: 18 },
+        title: { text: "Genomic Position (bp)", font: { size: 20 } },
         side: "bottom",
         rangeslider: { visible: true, thickness: 0.06 },
       },
       height: Math.max(totalHeight, 300),
-      margin: { l: 10, r: 10, t: 30, b: 60 },
+      margin: { l: 20, r: 10, t: 50, b: 60 },
       shapes,
       annotations,
       barmode: "overlay",
@@ -407,7 +420,7 @@ export default function GenomeView({
     };
 
     return { plotData: traces, layout: layoutObj };
-  }, [genomeData, visibleModels, showRawSignal, showCandidates]);
+  }, [genomeData, visibleModels, showRawSignal, showCandidates, showMetrics]);
 
   const wrapperRef = useRef(null);
 
@@ -516,12 +529,26 @@ export default function GenomeView({
           config={{
             responsive: true,
             displayModeBar: true,
-            modeBarButtonsToAdd: ["select2d", "lasso2d"],
+            modeBarButtonsToRemove: ["toImage"],
+            modeBarButtonsToAdd: [
+              {
+                name: "Download as SVG",
+                icon: Plotly.Icons.camera,
+                click: (gd) => {
+                  Plotly.relayout(gd, { "xaxis.rangeslider.visible": false }).then(() => {
+                    return Plotly.downloadImage(gd, {
+                      format: "svg",
+                      filename: `${genomeData?.assembly || "genome"}_overview`,
+                    });
+                  }).then(() => {
+                    Plotly.relayout(gd, { "xaxis.rangeslider.visible": true, "xaxis.rangeslider.thickness": 0.06 });
+                  });
+                },
+              },
+              "select2d",
+              "lasso2d",
+            ],
             scrollZoom: true,
-            toImageButtonOptions: {
-              format: "svg",
-              filename: `${genomeData?.assembly || "genome"}_overview`,
-            },
           }}
           onRelayout={handleRelayout}
           style={{ width: "100%" }}
