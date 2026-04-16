@@ -21,6 +21,8 @@ export default function App() {
   const [sortBy, setSortBy] = useState("avg_mcc");
   const [showRawSignal, setShowRawSignal] = useState(false);
   const [showCandidates, setShowCandidates] = useState(false);
+  const [showMetrics, setShowMetrics] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // ── Load genome index ──────────────────────────────────────────────
   useEffect(() => {
@@ -95,6 +97,7 @@ export default function App() {
     setActiveView("genome");
     setSelectedProphage(null);
     setSelectedCandidate(null);
+    setIsPanelOpen(false);
   }, []);
 
   const handleToggleModel = useCallback((label) => {
@@ -144,7 +147,22 @@ export default function App() {
     <div className="app-container">
       <Header />
       <div className="main-layout">
+        <button
+          className="panel-toggle"
+          onClick={() => setIsPanelOpen((v) => !v)}
+          aria-label={isPanelOpen ? "Close controls" : "Open controls"}
+          aria-expanded={isPanelOpen}
+        >
+          {isPanelOpen ? "◀" : "▶"}
+        </button>
+        {isPanelOpen && (
+          <div
+            className="panel-backdrop"
+            onClick={() => setIsPanelOpen(false)}
+          />
+        )}
         <ControlPanel
+          isPanelOpen={isPanelOpen}
           genomeList={genomeList}
           selectedAssembly={selectedAssembly}
           onSelectAssembly={handleSelectAssembly}
@@ -161,6 +179,8 @@ export default function App() {
           onToggleRawSignal={() => setShowRawSignal((v) => !v)}
           showCandidates={showCandidates}
           onToggleCandidates={() => setShowCandidates((v) => !v)}
+          showMetrics={showMetrics}
+          onToggleMetrics={() => setShowMetrics((v) => !v)}
         />
         <div className="viz-area">
           {loading && <div className="loading">Loading genome data...</div>}
@@ -177,6 +197,7 @@ export default function App() {
               visibleModels={visibleModels}
               showRawSignal={showRawSignal}
               showCandidates={showCandidates}
+              showMetrics={showMetrics}
               onClickProphage={handleClickProphage}
               onClickCandidate={handleClickCandidate}
             />
@@ -190,6 +211,7 @@ export default function App() {
                 genomeData={genomeData}
                 prophageIndex={selectedProphage}
                 visibleModels={visibleModels}
+                showMetrics={showMetrics}
                 onBack={handleBackToGenome}
               />
             )}
@@ -207,6 +229,7 @@ export default function App() {
                   ) || null
                 }
                 visibleModels={visibleModels}
+                showMetrics={showMetrics}
                 onBack={handleBackToGenome}
               />
             )}
