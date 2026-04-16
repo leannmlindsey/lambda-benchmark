@@ -70,6 +70,33 @@ body {
   line-height: 1.4;
 }
 
+/* Compact header on narrow screens so the viz is actually visible */
+@media (max-width: 900px) {
+  .header {
+    padding: 8px 12px;
+  }
+
+  .header-inner {
+    gap: 10px;
+  }
+
+  .header-logo {
+    height: 48px;
+    width: 48px;
+  }
+
+  .header h1 {
+    font-size: 15px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+
+  /* Hide citation and long description on mobile */
+  .header-text p {
+    display: none;
+  }
+}
+
 .main-layout {
   display: flex;
   flex: 1;
