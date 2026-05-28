@@ -9,6 +9,12 @@ import {
   isComparisonModel,
   CATEGORY_COLORS,
 } from "../utils/constants";
+import { MANUSCRIPT_MODE, FONTS, ROW_HEIGHT, ROW_GAP, LEFT_MARGIN } from "../utils/figureMode";
+
+const LABEL_X = MANUSCRIPT_MODE ? -0.005 : 0;
+const LABEL_XANCHOR = MANUSCRIPT_MODE ? "right" : "left";
+const LABEL_Y = MANUSCRIPT_MODE ? 0.5 : 0;
+const LABEL_YANCHOR = MANUSCRIPT_MODE ? "middle" : "bottom";
 
 const PADDING = 10000; // 10kb padding on each side
 
@@ -250,40 +256,43 @@ export default function ProphageZoomView({
         });
       }
 
-      // Model label
+      // Model label. Manuscript: in left margin, upper half of row.
       annotations.push({
         text: `<b>${modelLabel}</b>`,
         xref: "paper",
         yref: `${yAxisId} domain`,
-        x: 0,
-        y: 0,
-        xanchor: "left",
-        yanchor: "bottom",
+        x: LABEL_X,
+        y: MANUSCRIPT_MODE ? 0.7 : LABEL_Y,
+        xanchor: LABEL_XANCHOR,
+        yanchor: MANUSCRIPT_MODE ? "middle" : LABEL_YANCHOR,
         showarrow: false,
-        font: { size: 28, color: "#333", family: "Arial" },
-        bgcolor: "rgba(255,255,255,0.85)",
+        font: { size: FONTS.label, color: "#333", family: "Arial" },
+        bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
         borderpad: 2,
       });
 
-      // Metrics — italic, below the subplot
+      // Metrics — italic. Website: below the subplot, flush left, with MCC.
+      // Manuscript: in left margin under the model label, no MCC.
       if (showMetrics && metrics) {
         const safeFixed = (v, d = 2) => {
           const n = Number(v);
           return v != null && v !== "" && !isNaN(n) ? n.toFixed(d) : "N/A";
         };
-        const mcc = safeFixed(metrics.filt_mcc);
         const rec = safeFixed(metrics.filt_recall);
         const prec = safeFixed(metrics.filt_precision);
+        const metricsText = MANUSCRIPT_MODE
+          ? `<i>Recall=${rec}   Prec=${prec}</i>`
+          : `<i>MCC=${safeFixed(metrics.filt_mcc)}   Recall=${rec}   Prec=${prec}</i>`;
         annotations.push({
-          text: `<i>MCC=${mcc}   Recall=${rec}   Prec=${prec}</i>`,
+          text: metricsText,
           xref: "paper",
           yref: `${yAxisId} domain`,
-          x: 0,
-          y: -0.15,
-          xanchor: "left",
-          yanchor: "top",
+          x: MANUSCRIPT_MODE ? LABEL_X : 0,
+          y: MANUSCRIPT_MODE ? 0.3 : -0.15,
+          xanchor: MANUSCRIPT_MODE ? LABEL_XANCHOR : "left",
+          yanchor: MANUSCRIPT_MODE ? "middle" : "top",
           showarrow: false,
-          font: { size: 24, color: "#333", family: "Arial" },
+          font: { size: FONTS.metrics, color: "#333", family: "Arial" },
           borderpad: 1,
         });
       }
@@ -382,13 +391,13 @@ export default function ProphageZoomView({
       text: "<b>PHROG Annotations</b>",
       xref: "paper",
       yref: `${phrogYAxis} domain`,
-      x: 0,
-      y: 0,
-      xanchor: "left",
-      yanchor: "bottom",
+      x: LABEL_X,
+      y: LABEL_Y,
+      xanchor: LABEL_XANCHOR,
+      yanchor: LABEL_YANCHOR,
       showarrow: false,
-      font: { size: 28, color: "#333", family: "Arial" },
-      bgcolor: "rgba(255,255,255,0.85)",
+      font: { size: FONTS.label, color: "#333", family: "Arial" },
+      bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
       borderpad: 3,
     });
 
@@ -420,31 +429,61 @@ export default function ProphageZoomView({
       });
     }
 
-    // PHROG category legend (inside chart, centered above PHROG row)
-    const legendParts = Object.entries(CATEGORY_COLORS).map(
-      ([cat, col]) => `<span style="color:${col}">&#9632;</span> ${cat}`
+    // PHROG category legend (inside chart, centered above PHROG row).
+    // Manuscript mode: fixed order with cleaner display labels, wrapped to
+    // multiple rows. Website mode: original order from CATEGORY_COLORS.
+    const PHROG_LEGEND_ORDER = [
+      ["head and packaging", "Head & Packaging"],
+      ["tail", "Tail"],
+      ["DNA; RNA and nucleotide metabolism", "DNA, RNA & Nucleotide Metabolism"],
+      ["connector", "Connector"],
+      ["lysis", "Lysis"],
+      ["transcription regulation", "Transcription Regulation"],
+      ["moron; auxiliary metabolic gene and host takeover", "Moron, AMG & Host Takeover"],
+      ["integration and excision", "Integration & Excision"],
+      ["other", "Other"],
+      ["unknown function", "No PHROG"],
+    ];
+    const legendPairs = MANUSCRIPT_MODE
+      ? PHROG_LEGEND_ORDER.map(([key, display]) => [display, CATEGORY_COLORS[key] || "#999999"])
+      : Object.entries(CATEGORY_COLORS);
+    const legendParts = legendPairs.map(
+      ([label, col]) => `<span style="color:${col}">&#9632;</span> ${label}`
     );
+    const perRow = MANUSCRIPT_MODE ? 5 : legendParts.length;
+    const legendRows = [];
+    for (let i = 0; i < legendParts.length; i += perRow) {
+      legendRows.push(legendParts.slice(i, i + perRow).join("&nbsp;&nbsp;&nbsp;"));
+    }
+    // Manuscript: start at the figure's left edge by using a negative x in
+    // paper coords (paper x=0 is the plot's left edge, so negative values
+    // sit in the left margin). Website: stay centered in the plot area.
     annotations.push({
-      text: legendParts.join("&nbsp;&nbsp;&nbsp;"),
+      text: legendRows.join("<br>"),
       xref: "paper",
       yref: "paper",
-      x: 0.5,
+      x: MANUSCRIPT_MODE ? 0.48 : 0.5,
       y: 1,
       xanchor: "center",
       yanchor: "bottom",
       showarrow: false,
-      font: { size: 18, color: "#333", family: "Arial" },
+      font: { size: FONTS.phrogLegend, color: "#333", family: "Arial" },
+      align: "left",
       borderpad: 4,
     });
 
     // ── Layout ───────────────────────────────────────────────────────
-    const rowHeight = 120;
-    const phrogHeight = 50;
+    const rowHeight = ROW_HEIGHT;
+    // Manuscript: PHROG row matches the model row height. Website: keep compact.
+    const phrogHeight = MANUSCRIPT_MODE ? rowHeight : 50;
     const totalHeight = rowHeight * nModels + phrogHeight + 100;
 
-    const gap = 0.03;
+    const gap = ROW_GAP;
+    // Extra breathing room between the PHROG row and the first model row.
+    const phrogGap = MANUSCRIPT_MODE ? 0.03 : 0;
     const phrogFraction = phrogHeight / totalHeight;
-    const modelFraction = (1 - phrogFraction - gap * nModels) / Math.max(nModels, 1);
+    const modelFraction =
+      (1 - phrogFraction - phrogGap - gap * nModels) / Math.max(nModels, 1);
 
     const yAxes = {};
 
@@ -459,7 +498,7 @@ export default function ProphageZoomView({
 
     // Model rows: below PHROG, top to bottom
     modelList.forEach((_, i) => {
-      const top = 1 - phrogFraction - gap - i * (modelFraction + gap);
+      const top = 1 - phrogFraction - phrogGap - gap - i * (modelFraction + gap);
       const bottom = top - modelFraction;
       const key = i === 0 ? "yaxis" : `yaxis${i + 1}`;
       yAxes[key] = {
@@ -481,17 +520,18 @@ export default function ProphageZoomView({
         maxallowed: viewEnd,
         showgrid: false,
         showticklabels: true,
-        tickformat: ",d",
-        tickfont: { size: 18 },
+        tickformat: "~s",
+        tickfont: { size: FONTS.xTick },
         title: {
           text: "Genomic Position (bp)",
-          font: { size: 20 },
+          font: { size: FONTS.xTitle },
         },
         side: "bottom",
+        anchor: nModels >= 2 ? `y${nModels}` : "y",
         rangeslider: { visible: true, thickness: 0.06 },
       },
       height: Math.max(totalHeight, 300),
-      margin: { l: 20, r: 10, t: 50, b: 60 },
+      margin: { l: LEFT_MARGIN, r: 10, t: MANUSCRIPT_MODE ? 120 : 50, b: 60 },
       shapes,
       annotations,
       barmode: "overlay",

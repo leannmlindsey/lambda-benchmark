@@ -27,7 +27,8 @@ export default function App() {
   // ── Load genome index ──────────────────────────────────────────────
   useEffect(() => {
     const basePath = import.meta.env.BASE_URL || "/";
-    fetch(`${basePath}data/index.json`)
+    const dataDir = import.meta.env.VITE_DATA_DIR || "data";
+    fetch(`${basePath}${dataDir}/index.json`)
       .then((r) => r.json())
       .then((data) => {
         setGenomeList(data);
@@ -97,7 +98,12 @@ export default function App() {
     setActiveView("genome");
     setSelectedProphage(null);
     setSelectedCandidate(null);
-    setIsPanelOpen(false);
+    // Only auto-close on the narrow-screen overlay (matches the 900px CSS
+    // breakpoint), where the panel covers the viz. On wider screens the panel
+    // is docked, so leave it wherever the user put it.
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      setIsPanelOpen(false);
+    }
   }, []);
 
   const handleToggleModel = useCallback((label) => {

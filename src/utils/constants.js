@@ -12,6 +12,8 @@ export const MODEL_COLORS = {
   "EVO2": "#ffcc8f",
   "EVO2 LP": "#e6944c",
   "EVO2+SAE": "#d4763a",
+  "GENA-LM": "#b39ddb",
+  "ModernGENA": "#7e57c2",
   // Comparison tools
   "geNomad": "#6A3D9A",
   "PhageBoost": "#B15928",
@@ -55,6 +57,8 @@ export const MODEL_ORDER = [
   "EVO2",
   "EVO2 LP",
   "EVO2+SAE",
+  "GENA-LM",
+  "ModernGENA",
 ];
 
 // Comparison tool order for display

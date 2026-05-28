@@ -1,6 +1,15 @@
 import { useMemo, useCallback, useRef } from "react";
 import { Plot, Plotly } from "../utils/plotly";
 import { getModelColor, getModelFilter, formatBp, formatBpExact, sortModels, isComparisonModel } from "../utils/constants";
+import { MANUSCRIPT_MODE, FONTS, ROW_HEIGHT, ROW_GAP, LEFT_MARGIN } from "../utils/figureMode";
+
+// In manuscript mode, row labels sit in the left margin (right-anchored
+// just outside the plot area). On the website, they overlay the top-left
+// of each subplot as before.
+const LABEL_X = MANUSCRIPT_MODE ? -0.005 : 0;
+const LABEL_XANCHOR = MANUSCRIPT_MODE ? "right" : "left";
+const LABEL_Y = MANUSCRIPT_MODE ? 0.5 : 0;
+const LABEL_YANCHOR = MANUSCRIPT_MODE ? "middle" : "bottom";
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -55,7 +64,7 @@ export default function GenomeView({
           (gt) => `${((gt.end - gt.start) / 1000).toFixed(0)} kb`
         ),
         textposition: "inside",
-        textfont: { color: "white", size: 16 },
+        textfont: { color: "white", size: FONTS.gtText },
         xaxis: "x",
         yaxis: gtYAxis,
         hovertemplate: gtRegions.map(
@@ -74,13 +83,13 @@ export default function GenomeView({
       text: "<b>Reference Prophages</b>",
       xref: "paper",
       yref: `${gtYAxis} domain`,
-      x: 0,
-      y: 0,
-      xanchor: "left",
-      yanchor: "bottom",
+      x: LABEL_X,
+      y: LABEL_Y,
+      xanchor: LABEL_XANCHOR,
+      yanchor: LABEL_YANCHOR,
       showarrow: false,
-      font: { size: 28, color: "#333", family: "Arial" },
-      bgcolor: "rgba(255,255,255,0.85)",
+      font: { size: FONTS.label, color: "#333", family: "Arial" },
+      bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
       borderpad: 3,
     });
 
@@ -102,7 +111,7 @@ export default function GenomeView({
           (c) => `${(c.size / 1000).toFixed(0)} kb`
         ),
         textposition: "inside",
-        textfont: { color: "white", size: 16 },
+        textfont: { color: "white", size: FONTS.gtText },
         xaxis: "x",
         yaxis: candidateYAxisId,
         hovertemplate: candidateRegions.map(
@@ -125,13 +134,13 @@ export default function GenomeView({
         text: `<b>Candidates</b> (${candidateRegions.length})`,
         xref: "paper",
         yref: `${candidateYAxisId} domain`,
-        x: 0,
-        y: 1,
-        xanchor: "left",
-        yanchor: "top",
+        x: LABEL_X,
+        y: MANUSCRIPT_MODE ? 0.5 : 1,
+        xanchor: LABEL_XANCHOR,
+        yanchor: MANUSCRIPT_MODE ? "middle" : "top",
         showarrow: false,
-        font: { size: 28, color: "#333", family: "Arial" },
-        bgcolor: "rgba(255,255,255,0.85)",
+        font: { size: FONTS.label, color: "#333", family: "Arial" },
+        bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
         borderpad: 3,
       });
     }
@@ -305,49 +314,52 @@ export default function GenomeView({
         return v != null && v !== "" && !isNaN(n) ? n.toFixed(d) : "N/A";
       };
 
-      // Model name — large label
+      // Model name — large label. Manuscript: in left margin, upper half of row.
       annotations.push({
         text: `<b>${modelLabel}</b>`,
         xref: "paper",
         yref: `${yAxisId} domain`,
-        x: 0,
-        y: 0,
-        xanchor: "left",
-        yanchor: "bottom",
+        x: LABEL_X,
+        y: MANUSCRIPT_MODE ? 0.7 : LABEL_Y,
+        xanchor: LABEL_XANCHOR,
+        yanchor: MANUSCRIPT_MODE ? "middle" : LABEL_YANCHOR,
         showarrow: false,
-        font: { size: 28, color: "#333", family: "Arial" },
-        bgcolor: "rgba(255,255,255,0.85)",
+        font: { size: FONTS.label, color: "#333", family: "Arial" },
+        bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
         borderpad: 2,
       });
 
-      // Metrics — italic, below the subplot
+      // Metrics — italic. Website: below the subplot, flush left, with MCC.
+      // Manuscript: in left margin under the model label, no MCC.
       if (showMetrics && metrics) {
-        const mcc = safeFixed(metrics.filt_mcc);
         const rec = safeFixed(metrics.filt_recall);
         const prec = safeFixed(metrics.filt_precision);
+        const metricsText = MANUSCRIPT_MODE
+          ? `<i>Recall=${rec}   Prec=${prec}</i>`
+          : `<i>MCC=${safeFixed(metrics.filt_mcc)}   Recall=${rec}   Prec=${prec}</i>`;
         annotations.push({
-          text: `<i>MCC=${mcc}   Recall=${rec}   Prec=${prec}</i>`,
+          text: metricsText,
           xref: "paper",
           yref: `${yAxisId} domain`,
-          x: 0,
-          y: -0.15,
-          xanchor: "left",
-          yanchor: "top",
+          x: MANUSCRIPT_MODE ? LABEL_X : 0,
+          y: MANUSCRIPT_MODE ? 0.3 : -0.15,
+          xanchor: MANUSCRIPT_MODE ? LABEL_XANCHOR : "left",
+          yanchor: MANUSCRIPT_MODE ? "middle" : "top",
           showarrow: false,
-          font: { size: 24, color: "#333", family: "Arial" },
+          font: { size: FONTS.metrics, color: "#333", family: "Arial" },
           borderpad: 1,
         });
       }
     });
 
     // ── Layout ───────────────────────────────────────────────────────
-    const rowHeight = 120;
+    const rowHeight = ROW_HEIGHT;
     const gtRowHeight = 50;
     const candidateRowHeight = 50;
     const totalHeight = rowHeight * nModels + gtRowHeight
       + (showCandidateRow ? candidateRowHeight : 0) + 100;
 
-    const gap = 0.03;
+    const gap = ROW_GAP;
     const gtFraction = gtRowHeight / totalHeight;
     const candidateFraction = showCandidateRow ? candidateRowHeight / totalHeight : 0;
     const headerFraction = gtFraction + candidateFraction + (showCandidateRow ? gap : 0);
@@ -403,14 +415,15 @@ export default function GenomeView({
         maxallowed: genomeLen,
         showgrid: false,
         showticklabels: true,
-        tickformat: ",d",
-        tickfont: { size: 18 },
-        title: { text: "Genomic Position (bp)", font: { size: 20 } },
+        tickformat: "~s",
+        tickfont: { size: FONTS.xTick },
+        title: { text: "Genomic Position (bp)", font: { size: FONTS.xTitle } },
         side: "bottom",
+        anchor: `y${nModels + 1}`,
         rangeslider: { visible: true, thickness: 0.06 },
       },
       height: Math.max(totalHeight, 300),
-      margin: { l: 20, r: 10, t: 50, b: 60 },
+      margin: { l: LEFT_MARGIN, r: 10, t: 50, b: 60 },
       shapes,
       annotations,
       barmode: "overlay",

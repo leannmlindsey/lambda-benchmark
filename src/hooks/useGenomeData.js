@@ -29,7 +29,8 @@ export function useGenomeData(assembly, windowSize = "2k") {
     setError(null);
 
     const basePath = import.meta.env.BASE_URL || "/";
-    fetch(`${basePath}data/${assembly}_${windowSize}.json`)
+    const dataDir = import.meta.env.VITE_DATA_DIR || "data";
+    fetch(`${basePath}${dataDir}/${assembly}_${windowSize}.json`)
       .then((r) => {
         if (!r.ok) throw new Error(`Failed to load ${assembly}_${windowSize}.json`);
         return r.json();
