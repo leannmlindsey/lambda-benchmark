@@ -6,6 +6,7 @@ import ProphageZoomView from "./components/ProphageZoomView";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { useGenomeData } from "./hooks/useGenomeData";
 import { isComparisonModel } from "./utils/constants";
+import { MANUSCRIPT_MODE_DEFAULT } from "./utils/figureMode";
 import "./styles/App.css";
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
   const [showRawSignal, setShowRawSignal] = useState(false);
   const [showCandidates, setShowCandidates] = useState(false);
   const [showMetrics, setShowMetrics] = useState(false);
+  const [manuscriptMode, setManuscriptMode] = useState(MANUSCRIPT_MODE_DEFAULT);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // ── Load genome index ──────────────────────────────────────────────
@@ -187,6 +189,8 @@ export default function App() {
           onToggleCandidates={() => setShowCandidates((v) => !v)}
           showMetrics={showMetrics}
           onToggleMetrics={() => setShowMetrics((v) => !v)}
+          manuscriptMode={manuscriptMode}
+          onToggleManuscript={() => setManuscriptMode((v) => !v)}
         />
         <div className="viz-area">
           {loading && <div className="loading">Loading genome data...</div>}
@@ -204,6 +208,7 @@ export default function App() {
               showRawSignal={showRawSignal}
               showCandidates={showCandidates}
               showMetrics={showMetrics}
+              manuscriptMode={manuscriptMode}
               onClickProphage={handleClickProphage}
               onClickCandidate={handleClickCandidate}
             />
@@ -218,6 +223,7 @@ export default function App() {
                 prophageIndex={selectedProphage}
                 visibleModels={visibleModels}
                 showMetrics={showMetrics}
+                manuscriptMode={manuscriptMode}
                 onBack={handleBackToGenome}
               />
             )}
@@ -236,6 +242,7 @@ export default function App() {
                 }
                 visibleModels={visibleModels}
                 showMetrics={showMetrics}
+                manuscriptMode={manuscriptMode}
                 onBack={handleBackToGenome}
               />
             )}

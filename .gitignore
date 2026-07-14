@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Local data backups (large, not deployed)
+DATA_BACKUP_pre_evo2_20260630/
+public/data_pre_bestof_backup/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

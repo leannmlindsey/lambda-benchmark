@@ -21,6 +21,8 @@ export default function ControlPanel({
   onToggleCandidates,
   showMetrics,
   onToggleMetrics,
+  manuscriptMode,
+  onToggleManuscript,
 }) {
   // Get unique phyla with counts
   const phylaInfo = useMemo(() => {
@@ -256,6 +258,15 @@ export default function ControlPanel({
             Show candidate prophages ({genomeData.candidate_prophages.length})
           </label>
         )}
+        {/* Manuscript mode — larger fonts / figure-export layout */}
+        <label className="raw-signal-toggle">
+          <input
+            type="checkbox"
+            checked={manuscriptMode}
+            onChange={onToggleManuscript}
+          />
+          Manuscript mode (figure export layout)
+        </label>
       </div>
 
       {/* Comparison Tools */}

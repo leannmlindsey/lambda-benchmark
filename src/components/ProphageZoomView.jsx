@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useRef } from "react";
+import { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import { Plot, Plotly } from "../utils/plotly";
 import {
   getModelColor,
@@ -9,12 +9,7 @@ import {
   isComparisonModel,
   CATEGORY_COLORS,
 } from "../utils/constants";
-import { MANUSCRIPT_MODE, FONTS, ROW_HEIGHT, ROW_GAP, LEFT_MARGIN } from "../utils/figureMode";
-
-const LABEL_X = MANUSCRIPT_MODE ? -0.005 : 0;
-const LABEL_XANCHOR = MANUSCRIPT_MODE ? "right" : "left";
-const LABEL_Y = MANUSCRIPT_MODE ? 0.5 : 0;
-const LABEL_YANCHOR = MANUSCRIPT_MODE ? "middle" : "bottom";
+import { getFigureConfig } from "../utils/figureMode";
 
 const PADDING = 10000; // 10kb padding on each side
 
@@ -36,12 +31,19 @@ export default function ProphageZoomView({
   candidateRegion,
   visibleModels,
   showMetrics,
+  manuscriptMode,
   onBack,
 }) {
   const isCandidate = candidateRegion != null;
 
   const { plotData, layout } = useMemo(() => {
     if (!genomeData) return { plotData: [], layout: {} };
+
+    const MANUSCRIPT_MODE = manuscriptMode;
+    const {
+      FONTS, ROW_HEIGHT, ROW_GAP, LEFT_MARGIN,
+      LABEL_X, LABEL_XANCHOR, LABEL_Y, LABEL_YANCHOR,
+    } = getFigureConfig(manuscriptMode);
 
     // Determine region: GT mode or candidate mode
     const region = isCandidate
@@ -256,24 +258,29 @@ export default function ProphageZoomView({
         });
       }
 
-      // Model label. Manuscript: in left margin, upper half of row.
+      // Model label. Manuscript: in left margin, flush with the bottom of the
+      // row so the name uses the row's full vertical space.
       annotations.push({
         text: `<b>${modelLabel}</b>`,
         xref: "paper",
         yref: `${yAxisId} domain`,
         x: LABEL_X,
-        y: MANUSCRIPT_MODE ? 0.7 : LABEL_Y,
+        y: MANUSCRIPT_MODE ? 0 : LABEL_Y,
         xanchor: LABEL_XANCHOR,
-        yanchor: MANUSCRIPT_MODE ? "middle" : LABEL_YANCHOR,
+        yanchor: MANUSCRIPT_MODE ? "bottom" : LABEL_YANCHOR,
         showarrow: false,
         font: { size: FONTS.label, color: "#333", family: "Arial" },
         bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
         borderpad: 2,
       });
 
-      // Metrics — italic. Website: below the subplot, flush left, with MCC.
-      // Manuscript: in left margin under the model label, no MCC.
-      if (showMetrics && metrics) {
+      // Zoomed single-prophage panels intentionally show no MCC: MCC is a
+      // genome-wide metric and is misleading at single-prophage scale. The
+      // quantitative score lives only in the genome-wide figure.
+
+      // Metrics — italic, website only (below the subplot, flush left, with MCC).
+      // Suppressed in manuscript mode so the model name owns the full row.
+      if (showMetrics && metrics && !MANUSCRIPT_MODE) {
         const safeFixed = (v, d = 2) => {
           const n = Number(v);
           return v != null && v !== "" && !isNaN(n) ? n.toFixed(d) : "N/A";
@@ -540,10 +547,25 @@ export default function ProphageZoomView({
     };
 
     return { plotData: traces, layout: layoutObj };
-  }, [genomeData, prophageIndex, visibleModels, isCandidate, candidateRegion, showMetrics]);
+  }, [genomeData, prophageIndex, visibleModels, isCandidate, candidateRegion, showMetrics, manuscriptMode]);
 
   const plotRef = useRef(null);
   const isClampingRef = useRef(false);
+  const wrapperRef = useRef(null);
+
+  // Drive plot width explicitly via ResizeObserver (see GenomeView note): avoids
+  // Plotly autosize squashing the rows when the scrollable viz-area resizes.
+  const [plotWidth, setPlotWidth] = useState(0);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect?.width;
+      if (w > 0) setPlotWidth(Math.round(w));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Compute view bounds for clamping (must match useMemo)
   const viewBounds = useMemo(() => {
@@ -587,7 +609,7 @@ export default function ProphageZoomView({
   if (!genomeData || (!isCandidate && prophageIndex == null)) return null;
 
   return (
-    <div>
+    <div ref={wrapperRef}>
       <button className="back-btn" onClick={onBack}>
         &larr; Back to genome view
       </button>
@@ -632,9 +654,8 @@ export default function ProphageZoomView({
       <Plot
         ref={plotRef}
         data={plotData}
-        layout={layout}
+        layout={plotWidth ? { ...layout, width: plotWidth } : layout}
         config={{
-          responsive: true,
           displayModeBar: true,
           modeBarButtonsToRemove: ["toImage"],
           modeBarButtonsToAdd: [
@@ -647,6 +668,22 @@ export default function ProphageZoomView({
                   : `${genomeData?.assembly || "prophage"}_prophage${(prophageIndex || 0) + 1}`;
                 Plotly.relayout(gd, { "xaxis.rangeslider.visible": false }).then(() => {
                   return Plotly.downloadImage(gd, { format: "svg", filename });
+                }).then(() => {
+                  Plotly.relayout(gd, { "xaxis.rangeslider.visible": true, "xaxis.rangeslider.thickness": 0.06 });
+                });
+              },
+            },
+            {
+              name: "Download hi-res PNG (for Google Docs)",
+              icon: Plotly.Icons.camera,
+              click: (gd) => {
+                const filename = isCandidate
+                  ? `${genomeData?.assembly || "prophage"}_candidate${candidateRegion?.candidate_id}`
+                  : `${genomeData?.assembly || "prophage"}_prophage${(prophageIndex || 0) + 1}`;
+                const w = gd._fullLayout?.width || gd.clientWidth || 1200;
+                const h = gd._fullLayout?.height || 800;
+                Plotly.relayout(gd, { "xaxis.rangeslider.visible": false }).then(() => {
+                  return Plotly.downloadImage(gd, { format: "png", filename, width: w, height: h, scale: 4 });
                 }).then(() => {
                   Plotly.relayout(gd, { "xaxis.rangeslider.visible": true, "xaxis.rangeslider.thickness": 0.06 });
                 });

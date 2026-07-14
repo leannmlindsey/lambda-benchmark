@@ -54,11 +54,11 @@ export const MODEL_ORDER = [
   "Caduceus",
   "Generanno",
   "EVO",
+  "GENA-LM",
+  "ModernGENA",
   "EVO2",
   "EVO2 LP",
   "EVO2+SAE",
-  "GENA-LM",
-  "ModernGENA",
 ];
 
 // Comparison tool order for display
@@ -124,6 +124,45 @@ export function getModelColor(label) {
 // Check if a model has filter settings
 export function getModelFilter(label) {
   return BEST_FILTERS[label] || null;
+}
+
+// ── EVO2+SAE display rescaling ─────────────────────────────────────────────
+// EVO2+SAE reports SAE "max_activation" magnitudes (~0..12), NOT a 0-1
+// probability like every other model. On the shared 0-1 axis those values
+// saturate at the top and read as noise. For VISUALIZATION ONLY we rescale its
+// per-segment and clustered scores by the global max activation so the signal
+// fills the same 0-1 window as the probability models — this makes the
+// prophage peaks visible. It does NOT change the precomputed clustering/metrics
+// (avg_score is only rescaled for plotting). Divisor = global max activation
+// observed across all genomes/window sizes. Set to 0 to disable (revert).
+export const EVO2_SAE_ACTIVATION_MAX = 12.125;
+
+function isSaeLabel(label) {
+  return label.includes("EVO2+SAE");
+}
+
+// Rescale EVO2+SAE per_segment prob and clustered avg_score into [0,1] in place.
+export function normalizeSaeScores(data) {
+  if (!data || !EVO2_SAE_ACTIVATION_MAX) return data;
+  const div = EVO2_SAE_ACTIVATION_MAX;
+  const clamp = (v) => Math.min(v / div, 1);
+  if (data.per_segment) {
+    for (const label of Object.keys(data.per_segment)) {
+      if (!isSaeLabel(label)) continue;
+      data.per_segment[label] = data.per_segment[label].map(
+        (s) => [s[0], s[1], clamp(s[2]), s[3]]
+      );
+    }
+  }
+  if (data.clustered_predictions) {
+    for (const label of Object.keys(data.clustered_predictions)) {
+      if (!isSaeLabel(label)) continue;
+      data.clustered_predictions[label] = data.clustered_predictions[label].map(
+        (p) => ({ ...p, avg_score: clamp(p.avg_score) })
+      );
+    }
+  }
+  return data;
 }
 
 // Format genomic coordinates (compact, for labels/buttons)

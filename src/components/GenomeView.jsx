@@ -1,15 +1,7 @@
-import { useMemo, useCallback, useRef } from "react";
+import { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import { Plot, Plotly } from "../utils/plotly";
 import { getModelColor, getModelFilter, formatBp, formatBpExact, sortModels, isComparisonModel } from "../utils/constants";
-import { MANUSCRIPT_MODE, FONTS, ROW_HEIGHT, ROW_GAP, LEFT_MARGIN } from "../utils/figureMode";
-
-// In manuscript mode, row labels sit in the left margin (right-anchored
-// just outside the plot area). On the website, they overlay the top-left
-// of each subplot as before.
-const LABEL_X = MANUSCRIPT_MODE ? -0.005 : 0;
-const LABEL_XANCHOR = MANUSCRIPT_MODE ? "right" : "left";
-const LABEL_Y = MANUSCRIPT_MODE ? 0.5 : 0;
-const LABEL_YANCHOR = MANUSCRIPT_MODE ? "middle" : "bottom";
+import { getFigureConfig } from "../utils/figureMode";
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -30,6 +22,7 @@ export default function GenomeView({
   showRawSignal,
   showCandidates,
   showMetrics,
+  manuscriptMode,
   onClickProphage,
   onClickCandidate,
 }) {
@@ -37,6 +30,12 @@ export default function GenomeView({
 
   const { plotData, layout } = useMemo(() => {
     if (!genomeData) return { plotData: [], layout: {} };
+
+    const MANUSCRIPT_MODE = manuscriptMode;
+    const {
+      FONTS, ROW_HEIGHT, ROW_GAP, LEFT_MARGIN, RIGHT_MARGIN,
+      LABEL_X, LABEL_XANCHOR, LABEL_Y, LABEL_YANCHOR,
+    } = getFigureConfig(manuscriptMode);
 
     const models = Object.keys(genomeData.per_segment || {})
       .concat(Object.keys(genomeData.clustered_predictions || {}))
@@ -92,6 +91,22 @@ export default function GenomeView({
       bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
       borderpad: 3,
     });
+
+    // Manuscript: "MCC" column header, in the right margin above the values.
+    if (MANUSCRIPT_MODE) {
+      annotations.push({
+        text: "<b>MCC</b>",
+        xref: "paper",
+        yref: `${gtYAxis} domain`,
+        x: 1.005,
+        y: 0.5,
+        xanchor: "left",
+        yanchor: "middle",
+        showarrow: false,
+        font: { size: FONTS.metrics, color: "#333", family: "Arial" },
+        borderpad: 2,
+      });
+    }
 
     // ── Candidate prophage row (between GT and models) ──────────────
     const candidateRegions = genomeData.candidate_prophages || [];
@@ -314,24 +329,45 @@ export default function GenomeView({
         return v != null && v !== "" && !isNaN(n) ? n.toFixed(d) : "N/A";
       };
 
-      // Model name — large label. Manuscript: in left margin, upper half of row.
+      // Model name — large label. Manuscript: in left margin, flush with the
+      // bottom of the row so the name uses the row's full vertical space.
       annotations.push({
         text: `<b>${modelLabel}</b>`,
         xref: "paper",
         yref: `${yAxisId} domain`,
         x: LABEL_X,
-        y: MANUSCRIPT_MODE ? 0.7 : LABEL_Y,
+        y: MANUSCRIPT_MODE ? 0 : LABEL_Y,
         xanchor: LABEL_XANCHOR,
-        yanchor: MANUSCRIPT_MODE ? "middle" : LABEL_YANCHOR,
+        yanchor: MANUSCRIPT_MODE ? "bottom" : LABEL_YANCHOR,
         showarrow: false,
         font: { size: FONTS.label, color: "#333", family: "Arial" },
         bgcolor: MANUSCRIPT_MODE ? undefined : "rgba(255,255,255,0.85)",
         borderpad: 2,
       });
 
-      // Metrics — italic. Website: below the subplot, flush left, with MCC.
-      // Manuscript: in left margin under the model label, no MCC.
-      if (showMetrics && metrics) {
+      // Manuscript: single MCC score in the right margin, aligned with the
+      // model name (flush bottom of the row). Column is headed by "MCC" above.
+      if (MANUSCRIPT_MODE && metrics) {
+        const mccNum = Number(metrics.filt_mcc);
+        if (metrics.filt_mcc != null && metrics.filt_mcc !== "" && !isNaN(mccNum)) {
+          annotations.push({
+            text: `<b>${mccNum.toFixed(2)}</b>`,
+            xref: "paper",
+            yref: `${yAxisId} domain`,
+            x: 1.005,
+            y: 0,
+            xanchor: "left",
+            yanchor: "bottom",
+            showarrow: false,
+            font: { size: FONTS.metrics, color: "#333", family: "Arial" },
+            borderpad: 2,
+          });
+        }
+      }
+
+      // Metrics — italic, website only (below the subplot, flush left, with MCC).
+      // Suppressed in manuscript mode so the model name owns the full row.
+      if (showMetrics && metrics && !MANUSCRIPT_MODE) {
         const rec = safeFixed(metrics.filt_recall);
         const prec = safeFixed(metrics.filt_precision);
         const metricsText = MANUSCRIPT_MODE
@@ -423,7 +459,7 @@ export default function GenomeView({
         rangeslider: { visible: true, thickness: 0.06 },
       },
       height: Math.max(totalHeight, 300),
-      margin: { l: LEFT_MARGIN, r: 10, t: 50, b: 60 },
+      margin: { l: LEFT_MARGIN, r: RIGHT_MARGIN, t: 50, b: 60 },
       shapes,
       annotations,
       barmode: "overlay",
@@ -433,9 +469,26 @@ export default function GenomeView({
     };
 
     return { plotData: traces, layout: layoutObj };
-  }, [genomeData, visibleModels, showRawSignal, showCandidates, showMetrics]);
+  }, [genomeData, visibleModels, showRawSignal, showCandidates, showMetrics, manuscriptMode]);
 
   const wrapperRef = useRef(null);
+
+  // Track the container width and drive the plot width explicitly. We do NOT
+  // use Plotly's responsive autosize here: the viz-area scrolls (bounded
+  // height), and Plotly autosize would shrink this tall multi-row plot to the
+  // container's visible height, overlapping the rows. A ResizeObserver catches
+  // both window resizes and the panel collapse/expand, updating width only.
+  const [plotWidth, setPlotWidth] = useState(0);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect?.width;
+      if (w > 0) setPlotWidth(Math.round(w));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Relayout handler (clamping handled natively by minallowed/maxallowed)
   const handleRelayout = useCallback(() => {}, []);
@@ -538,9 +591,8 @@ export default function GenomeView({
         <Plot
           ref={plotRef}
           data={plotData}
-          layout={layout}
+          layout={plotWidth ? { ...layout, width: plotWidth } : layout}
           config={{
-            responsive: true,
             displayModeBar: true,
             modeBarButtonsToRemove: ["toImage"],
             modeBarButtonsToAdd: [
@@ -552,6 +604,25 @@ export default function GenomeView({
                     return Plotly.downloadImage(gd, {
                       format: "svg",
                       filename: `${genomeData?.assembly || "genome"}_overview`,
+                    });
+                  }).then(() => {
+                    Plotly.relayout(gd, { "xaxis.rangeslider.visible": true, "xaxis.rangeslider.thickness": 0.06 });
+                  });
+                },
+              },
+              {
+                name: "Download hi-res PNG (for Google Docs)",
+                icon: Plotly.Icons.camera,
+                click: (gd) => {
+                  const w = gd._fullLayout?.width || gd.clientWidth || 1200;
+                  const h = gd._fullLayout?.height || 800;
+                  Plotly.relayout(gd, { "xaxis.rangeslider.visible": false }).then(() => {
+                    return Plotly.downloadImage(gd, {
+                      format: "png",
+                      filename: `${genomeData?.assembly || "genome"}_overview`,
+                      width: w,
+                      height: h,
+                      scale: 4,
                     });
                   }).then(() => {
                     Plotly.relayout(gd, { "xaxis.rangeslider.visible": true, "xaxis.rangeslider.thickness": 0.06 });

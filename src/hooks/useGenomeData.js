@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { normalizeSaeScores } from "../utils/constants";
 
 /**
  * Hook to fetch and cache per-genome JSON data on demand.
@@ -36,6 +37,7 @@ export function useGenomeData(assembly, windowSize = "2k") {
         return r.json();
       })
       .then((d) => {
+        normalizeSaeScores(d); // rescale EVO2+SAE activations to 0-1 for display
         cache.current[cacheKey] = d;
         setData(d);
         setLoading(false);

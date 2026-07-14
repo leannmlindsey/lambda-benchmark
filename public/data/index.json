@@ -7,7 +7,7 @@
     "genus": "Pseudomonas_E",
     "num_prophages": 2,
     "genome_length": 7076000,
-    "avg_mcc": 0.645,
+    "avg_mcc": 0.687,
     "available_sizes": [
       "2k",
       "4k",
@@ -22,7 +22,7 @@
     "genus": "Gordonia",
     "num_prophages": 1,
     "genome_length": 5443000,
-    "avg_mcc": 0.0,
+    "avg_mcc": 0.609,
     "available_sizes": [
       "2k",
       "4k",
@@ -37,7 +37,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 3,
     "genome_length": 6766000,
-    "avg_mcc": 0.632,
+    "avg_mcc": 0.658,
     "available_sizes": [
       "2k",
       "4k",
@@ -52,7 +52,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 3,
     "genome_length": 6582000,
-    "avg_mcc": 0.676,
+    "avg_mcc": 0.696,
     "available_sizes": [
       "2k",
       "4k",
@@ -67,7 +67,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 2,
     "genome_length": 6829000,
-    "avg_mcc": 0.529,
+    "avg_mcc": 0.547,
     "available_sizes": [
       "2k",
       "4k",
@@ -82,7 +82,7 @@
     "genus": "Gordonia",
     "num_prophages": 1,
     "genome_length": 4008000,
-    "avg_mcc": -0.015,
+    "avg_mcc": -0.014,
     "available_sizes": [
       "2k",
       "4k",
@@ -97,7 +97,7 @@
     "genus": "Gordonia",
     "num_prophages": 1,
     "genome_length": 3749000,
-    "avg_mcc": 0.88,
+    "avg_mcc": 0.938,
     "available_sizes": [
       "2k",
       "4k",
@@ -112,7 +112,7 @@
     "genus": "Gordonia",
     "num_prophages": 4,
     "genome_length": 5106000,
-    "avg_mcc": 0.836,
+    "avg_mcc": 0.85,
     "available_sizes": [
       "2k",
       "4k",
@@ -127,7 +127,7 @@
     "genus": "Gordonia",
     "num_prophages": 2,
     "genome_length": 4262000,
-    "avg_mcc": 0.806,
+    "avg_mcc": 0.852,
     "available_sizes": [
       "2k",
       "4k",
@@ -142,7 +142,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 1,
     "genome_length": 5114000,
-    "avg_mcc": 0.596,
+    "avg_mcc": 0.576,
     "available_sizes": [
       "2k",
       "4k",
@@ -157,7 +157,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 1,
     "genome_length": 5075000,
-    "avg_mcc": 0.766,
+    "avg_mcc": 0.895,
     "available_sizes": [
       "2k",
       "4k",
@@ -172,7 +172,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 1,
     "genome_length": 5028000,
-    "avg_mcc": 0.834,
+    "avg_mcc": 0.937,
     "available_sizes": [
       "2k",
       "4k",
@@ -187,7 +187,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 2,
     "genome_length": 5109000,
-    "avg_mcc": 0.863,
+    "avg_mcc": 0.951,
     "available_sizes": [
       "2k",
       "4k",
@@ -202,7 +202,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 5,
     "genome_length": 5314000,
-    "avg_mcc": 0.882,
+    "avg_mcc": 0.866,
     "available_sizes": [
       "2k",
       "4k",
@@ -217,7 +217,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 2,
     "genome_length": 5122000,
-    "avg_mcc": 0.819,
+    "avg_mcc": 0.929,
     "available_sizes": [
       "2k",
       "4k",
@@ -232,7 +232,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 6,
     "genome_length": 5379000,
-    "avg_mcc": 0.88,
+    "avg_mcc": 0.899,
     "available_sizes": [
       "2k",
       "4k",
@@ -247,7 +247,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 1,
     "genome_length": 5121000,
-    "avg_mcc": 0.571,
+    "avg_mcc": 0.63,
     "available_sizes": [
       "2k",
       "4k",
@@ -262,7 +262,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 4,
     "genome_length": 5354000,
-    "avg_mcc": 0.789,
+    "avg_mcc": 0.816,
     "available_sizes": [
       "2k",
       "4k",
@@ -277,7 +277,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 4,
     "genome_length": 5220000,
-    "avg_mcc": 0.867,
+    "avg_mcc": 0.918,
     "available_sizes": [
       "2k",
       "4k",
@@ -292,7 +292,7 @@
     "genus": "Gordonia",
     "num_prophages": 1,
     "genome_length": 5309000,
-    "avg_mcc": 0.76,
+    "avg_mcc": 0.861,
     "available_sizes": [
       "2k",
       "4k",
@@ -307,7 +307,7 @@
     "genus": "Gordonia",
     "num_prophages": 1,
     "genome_length": 5110000,
-    "avg_mcc": 0.693,
+    "avg_mcc": 0.784,
     "available_sizes": [
       "2k",
       "4k",
@@ -322,7 +322,7 @@
     "genus": "Yersinia",
     "num_prophages": 5,
     "genome_length": 4602000,
-    "avg_mcc": 0.375,
+    "avg_mcc": 0.427,
     "available_sizes": [
       "2k",
       "4k",
@@ -337,7 +337,7 @@
     "genus": "Escherichia",
     "num_prophages": 22,
     "genome_length": 5530000,
-    "avg_mcc": 0.474,
+    "avg_mcc": 0.464,
     "available_sizes": [
       "2k",
       "4k",
@@ -352,7 +352,7 @@
     "genus": "Xylella",
     "num_prophages": 9,
     "genome_length": 2681000,
-    "avg_mcc": 0.217,
+    "avg_mcc": 0.232,
     "available_sizes": [
       "2k",
       "4k",
@@ -367,7 +367,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 4,
     "genome_length": 6266000,
-    "avg_mcc": 0.422,
+    "avg_mcc": 0.45,
     "available_sizes": [
       "2k",
       "4k",
@@ -382,7 +382,7 @@
     "genus": "Streptococcus",
     "num_prophages": 4,
     "genome_length": 1854000,
-    "avg_mcc": 0.799,
+    "avg_mcc": 0.856,
     "available_sizes": [
       "2k",
       "4k",
@@ -397,7 +397,7 @@
     "genus": "Lactococcus",
     "num_prophages": 6,
     "genome_length": 2367000,
-    "avg_mcc": 0.825,
+    "avg_mcc": 0.796,
     "available_sizes": [
       "2k",
       "4k",
@@ -411,8 +411,8 @@
     "phylum": "Pseudomonadota",
     "genus": "Escherichia",
     "num_prophages": 14,
-    "genome_length": 2073000,
-    "avg_mcc": 0.385,
+    "genome_length": 4609000,
+    "avg_mcc": 0.316,
     "available_sizes": [
       "2k",
       "4k",
@@ -427,7 +427,7 @@
     "genus": "Xanthomonas",
     "num_prophages": 4,
     "genome_length": 5078000,
-    "avg_mcc": 0.464,
+    "avg_mcc": 0.53,
     "available_sizes": [
       "2k",
       "4k",
@@ -442,7 +442,7 @@
     "genus": "Xanthomonas",
     "num_prophages": 2,
     "genome_length": 5177000,
-    "avg_mcc": 0.429,
+    "avg_mcc": 0.444,
     "available_sizes": [
       "2k",
       "4k",
@@ -457,7 +457,7 @@
     "genus": "Xylella",
     "num_prophages": 9,
     "genome_length": 2521000,
-    "avg_mcc": 0.266,
+    "avg_mcc": 0.259,
     "available_sizes": [
       "2k",
       "4k",
@@ -472,7 +472,7 @@
     "genus": "Streptococcus",
     "num_prophages": 2,
     "genome_length": 2162000,
-    "avg_mcc": 0.818,
+    "avg_mcc": 0.866,
     "available_sizes": [
       "2k",
       "4k",
@@ -487,7 +487,7 @@
     "genus": "Streptococcus",
     "num_prophages": 5,
     "genome_length": 1897000,
-    "avg_mcc": 0.811,
+    "avg_mcc": 0.877,
     "available_sizes": [
       "2k",
       "4k",
@@ -502,7 +502,7 @@
     "genus": "Escherichia",
     "num_prophages": 18,
     "genome_length": 4601000,
-    "avg_mcc": 0.328,
+    "avg_mcc": 0.319,
     "available_sizes": [
       "2k",
       "4k",
@@ -517,7 +517,7 @@
     "genus": "Streptococcus",
     "num_prophages": 6,
     "genome_length": 1902000,
-    "avg_mcc": 0.764,
+    "avg_mcc": 0.793,
     "available_sizes": [
       "2k",
       "4k",
@@ -532,7 +532,7 @@
     "genus": "Escherichia",
     "num_prophages": 10,
     "genome_length": 5233000,
-    "avg_mcc": 0.426,
+    "avg_mcc": 0.46,
     "available_sizes": [
       "2k",
       "4k",
@@ -547,7 +547,7 @@
     "genus": "Brucella",
     "num_prophages": 1,
     "genome_length": 2109000,
-    "avg_mcc": -0.007,
+    "avg_mcc": -0.005,
     "available_sizes": [
       "2k",
       "4k",
@@ -562,7 +562,7 @@
     "genus": "Bifidobacterium",
     "num_prophages": 1,
     "genome_length": 2258000,
-    "avg_mcc": 0.453,
+    "avg_mcc": 0.707,
     "available_sizes": [
       "2k",
       "4k",
@@ -577,7 +577,7 @@
     "genus": "Salmonella",
     "num_prophages": 6,
     "genome_length": 4793000,
-    "avg_mcc": 0.509,
+    "avg_mcc": 0.524,
     "available_sizes": [
       "2k",
       "4k",
@@ -592,7 +592,7 @@
     "genus": "Pseudomonas_E",
     "num_prophages": 5,
     "genome_length": 6183000,
-    "avg_mcc": 0.734,
+    "avg_mcc": 0.782,
     "available_sizes": [
       "2k",
       "4k",
@@ -607,7 +607,7 @@
     "genus": "Clostridium_G",
     "num_prophages": 3,
     "genome_length": 2801000,
-    "avg_mcc": 0.893,
+    "avg_mcc": 0.872,
     "available_sizes": [
       "2k",
       "4k",
@@ -622,7 +622,7 @@
     "genus": "Chromobacterium",
     "num_prophages": 3,
     "genome_length": 4753000,
-    "avg_mcc": 0.488,
+    "avg_mcc": 0.593,
     "available_sizes": [
       "2k",
       "4k",
@@ -637,7 +637,7 @@
     "genus": "Enterococcus",
     "num_prophages": 9,
     "genome_length": 3220000,
-    "avg_mcc": 0.549,
+    "avg_mcc": 0.561,
     "available_sizes": [
       "2k",
       "4k",
@@ -651,8 +651,8 @@
     "phylum": "Pseudomonadota",
     "genus": "Pseudomonas_E",
     "num_prophages": 8,
-    "genome_length": 4144000,
-    "avg_mcc": 0.419,
+    "genome_length": 6399000,
+    "avg_mcc": 0.376,
     "available_sizes": [
       "2k",
       "4k",
@@ -667,7 +667,7 @@
     "genus": "Bacillus_A",
     "num_prophages": 4,
     "genome_length": 5413000,
-    "avg_mcc": 0.696,
+    "avg_mcc": 0.679,
     "available_sizes": [
       "2k",
       "4k",
@@ -682,7 +682,7 @@
     "genus": "Bacillus_A",
     "num_prophages": 5,
     "genome_length": 5229000,
-    "avg_mcc": 0.591,
+    "avg_mcc": 0.626,
     "available_sizes": [
       "2k",
       "4k",
@@ -697,7 +697,7 @@
     "genus": "Wolbachia",
     "num_prophages": 5,
     "genome_length": 1269000,
-    "avg_mcc": 0.237,
+    "avg_mcc": 0.49,
     "available_sizes": [
       "2k",
       "4k",
@@ -712,7 +712,7 @@
     "genus": "Lactobacillus",
     "num_prophages": 2,
     "genome_length": 1994000,
-    "avg_mcc": 0.845,
+    "avg_mcc": 0.836,
     "available_sizes": [
       "2k",
       "4k",
@@ -727,7 +727,7 @@
     "genus": "Treponema_B",
     "num_prophages": 1,
     "genome_length": 2845000,
-    "avg_mcc": 0.455,
+    "avg_mcc": 0.546,
     "available_sizes": [
       "2k",
       "4k",
@@ -742,7 +742,7 @@
     "genus": "Clostridium_S",
     "num_prophages": 2,
     "genome_length": 3942000,
-    "avg_mcc": 0.75,
+    "avg_mcc": 0.727,
     "available_sizes": [
       "2k",
       "4k",
@@ -757,7 +757,7 @@
     "genus": "Neisseria",
     "num_prophages": 2,
     "genome_length": 2274000,
-    "avg_mcc": 0.618,
+    "avg_mcc": 0.665,
     "available_sizes": [
       "2k",
       "4k",
@@ -772,7 +772,7 @@
     "genus": "Yersinia",
     "num_prophages": 6,
     "genome_length": 4655000,
-    "avg_mcc": 0.419,
+    "avg_mcc": 0.43,
     "available_sizes": [
       "2k",
       "4k",
@@ -787,7 +787,7 @@
     "genus": "Neisseria",
     "num_prophages": 3,
     "genome_length": 2186000,
-    "avg_mcc": 0.515,
+    "avg_mcc": 0.542,
     "available_sizes": [
       "2k",
       "4k",
@@ -802,7 +802,7 @@
     "genus": "Ralstonia",
     "num_prophages": 8,
     "genome_length": 3718000,
-    "avg_mcc": 0.428,
+    "avg_mcc": 0.508,
     "available_sizes": [
       "2k",
       "4k",
@@ -817,7 +817,7 @@
     "genus": "Mesorhizobium",
     "num_prophages": 4,
     "genome_length": 7038000,
-    "avg_mcc": 0.45,
+    "avg_mcc": 0.446,
     "available_sizes": [
       "2k",
       "4k",
@@ -832,7 +832,7 @@
     "genus": "Staphylococcus",
     "num_prophages": 4,
     "genome_length": 2816000,
-    "avg_mcc": 0.264,
+    "avg_mcc": 0.436,
     "available_sizes": [
       "2k",
       "4k",
@@ -847,7 +847,7 @@
     "genus": "Staphylococcus",
     "num_prophages": 6,
     "genome_length": 2880000,
-    "avg_mcc": 0.396,
+    "avg_mcc": 0.49,
     "available_sizes": [
       "2k",
       "4k",
@@ -862,7 +862,7 @@
     "genus": "Sarcina",
     "num_prophages": 1,
     "genome_length": 3033000,
-    "avg_mcc": 0.728,
+    "avg_mcc": 0.744,
     "available_sizes": [
       "2k",
       "4k",
@@ -877,7 +877,7 @@
     "genus": "Streptomyces",
     "num_prophages": 1,
     "genome_length": 9027000,
-    "avg_mcc": 0.499,
+    "avg_mcc": 0.574,
     "available_sizes": [
       "2k",
       "4k",
@@ -892,7 +892,7 @@
     "genus": "Halalkalibacterium",
     "num_prophages": 4,
     "genome_length": 4204000,
-    "avg_mcc": 0.245,
+    "avg_mcc": 0.279,
     "available_sizes": [
       "2k",
       "4k",
@@ -907,7 +907,7 @@
     "genus": "Staphylococcus",
     "num_prophages": 4,
     "genome_length": 2822000,
-    "avg_mcc": 0.406,
+    "avg_mcc": 0.554,
     "available_sizes": [
       "2k",
       "4k",
@@ -922,7 +922,7 @@
     "genus": "Streptococcus",
     "num_prophages": 6,
     "genome_length": 1896000,
-    "avg_mcc": 0.863,
+    "avg_mcc": 0.894,
     "available_sizes": [
       "2k",
       "4k",
@@ -936,8 +936,8 @@
     "phylum": "Pseudomonadota",
     "genus": "Pseudomonas",
     "num_prophages": 4,
-    "genome_length": 1037000,
-    "avg_mcc": 0.8,
+    "genome_length": 6603000,
+    "avg_mcc": 0.861,
     "available_sizes": [
       "2k",
       "4k",
@@ -952,7 +952,7 @@
     "genus": "Haemophilus",
     "num_prophages": 3,
     "genome_length": 1832000,
-    "avg_mcc": 0.473,
+    "avg_mcc": 0.67,
     "available_sizes": [
       "2k",
       "4k",
@@ -967,7 +967,7 @@
     "genus": "Shewanella",
     "num_prophages": 3,
     "genome_length": 4971000,
-    "avg_mcc": 0.709,
+    "avg_mcc": 0.713,
     "available_sizes": [
       "2k",
       "4k",
@@ -982,7 +982,7 @@
     "genus": "Listeria",
     "num_prophages": 6,
     "genome_length": 3013000,
-    "avg_mcc": 0.845,
+    "avg_mcc": 0.808,
     "available_sizes": [
       "2k",
       "4k",
@@ -997,7 +997,7 @@
     "genus": "Corynebacterium",
     "num_prophages": 4,
     "genome_length": 2490000,
-    "avg_mcc": 0.389,
+    "avg_mcc": 0.408,
     "available_sizes": [
       "2k",
       "4k",
@@ -1012,7 +1012,7 @@
     "genus": "Mycobacterium",
     "num_prophages": 2,
     "genome_length": 4413000,
-    "avg_mcc": 0.171,
+    "avg_mcc": 0.034,
     "available_sizes": [
       "2k",
       "4k",
@@ -1027,7 +1027,7 @@
     "genus": "Salmonella",
     "num_prophages": 8,
     "genome_length": 4811000,
-    "avg_mcc": 0.603,
+    "avg_mcc": 0.629,
     "available_sizes": [
       "2k",
       "4k",
@@ -1042,7 +1042,7 @@
     "genus": "Listeria",
     "num_prophages": 2,
     "genome_length": 2946000,
-    "avg_mcc": 0.734,
+    "avg_mcc": 0.713,
     "available_sizes": [
       "2k",
       "4k",
@@ -1057,7 +1057,7 @@
     "genus": "Photorhabdus",
     "num_prophages": 25,
     "genome_length": 5690000,
-    "avg_mcc": 0.208,
+    "avg_mcc": 0.197,
     "available_sizes": [
       "2k",
       "4k",
@@ -1072,7 +1072,7 @@
     "genus": "Lactiplantibacillus",
     "num_prophages": 5,
     "genome_length": 3310000,
-    "avg_mcc": 0.654,
+    "avg_mcc": 0.675,
     "available_sizes": [
       "2k",
       "4k",
@@ -1087,7 +1087,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 1,
     "genome_length": 6329000,
-    "avg_mcc": 0.548,
+    "avg_mcc": 0.576,
     "available_sizes": [
       "2k",
       "4k",
@@ -1102,7 +1102,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 3,
     "genome_length": 6500000,
-    "avg_mcc": 0.69,
+    "avg_mcc": 0.684,
     "available_sizes": [
       "2k",
       "4k",
@@ -1117,7 +1117,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 3,
     "genome_length": 6552000,
-    "avg_mcc": 0.746,
+    "avg_mcc": 0.808,
     "available_sizes": [
       "2k",
       "4k",
@@ -1132,7 +1132,7 @@
     "genus": "Pseudomonas",
     "num_prophages": 3,
     "genome_length": 6727000,
-    "avg_mcc": 0.618,
+    "avg_mcc": 0.681,
     "available_sizes": [
       "2k",
       "4k",
@@ -1147,7 +1147,7 @@
     "genus": "",
     "num_prophages": 10,
     "genome_length": 4643000,
-    "avg_mcc": 0.181,
+    "avg_mcc": 0.175,
     "available_sizes": [
       "2k",
       "4k",
@@ -1162,7 +1162,7 @@
     "genus": "",
     "num_prophages": 4,
     "genome_length": 4217000,
-    "avg_mcc": 0.779,
+    "avg_mcc": 0.777,
     "available_sizes": [
       "2k",
       "4k",
@@ -1177,7 +1177,7 @@
     "genus": "",
     "num_prophages": 21,
     "genome_length": 5500000,
-    "avg_mcc": 0.513,
+    "avg_mcc": 0.496,
     "available_sizes": [
       "2k",
       "4k",
@@ -1192,7 +1192,7 @@
     "genus": "",
     "num_prophages": 8,
     "genome_length": 4859000,
-    "avg_mcc": 0.55,
+    "avg_mcc": 0.619,
     "available_sizes": [
       "2k",
       "4k",

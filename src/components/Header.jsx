@@ -9,7 +9,7 @@ export default function Header() {
           <p className="citation"><em>Lindsey, et al (2026) doi: <a href="https://doi.org/10.64898/2026.03.26.714501" target="_blank" rel="noopener noreferrer">10.64898/2026.03.26.714501</a></em></p>
           <p>
             Interactive visualization of genomic language model predictions on 80 bacterial genomes
-            with 387 annotated prophage regions. Select a genome from the left panel, then click on
+            with 380 annotated prophage regions. Select a genome from the left panel, then click on
             a ground truth region to zoom in and see per-segment predictions with PHROG functional annotations.
             Use the Plotly toolbar to zoom, pan, and select regions of interest.
           </p>
